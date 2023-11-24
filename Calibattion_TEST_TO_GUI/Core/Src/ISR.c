@@ -11,8 +11,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         // C# LOG獲得命令
         // Get_Command_From_C_shrap();
 
-        // PWM_Duty_Charge();
-
-        PWM_Freq_Chrange();
+        PWM_Duty_Freq_Change();
     }
 }
