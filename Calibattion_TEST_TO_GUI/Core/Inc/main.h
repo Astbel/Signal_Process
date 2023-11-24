@@ -23,8 +23,7 @@
 #define __MAIN_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -38,15 +37,16 @@ extern "C"
 #include "stdlib.h"
 #include "FLASH_SECTOR_F4.h"
 
-  /* Private includes ----------------------------------------------------------*/
-  /* USER CODE BEGIN Includes */
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 
-  /* USER CODE END Includes */
+/* USER CODE END Includes */
   extern UART_HandleTypeDef huart2;
   extern UART_HandleTypeDef huart3;
   extern TIM_HandleTypeDef htim10;
   extern ADC_HandleTypeDef hadc1;
   extern FLASH_EraseInitTypeDef flashstruct;
+
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 #define Timer_PRESCALER_VALUE (uint32_t)(((SystemCoreClock) / 45000000) - 1)
@@ -56,14 +56,13 @@ extern "C"
 #define pc_uart &huart3
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-// 記憶體儲存地址區域
+// 記憶體儲存地???????
 #define FLASH_USER_START_ADDR ADDR_FLASH_SECTOR_2 /* Start @ of user Flash area */
 #define FLASH_USER_END_ADDR ADDR_FLASH_SECTOR_7   //+  GetSectorSize(ADDR_FLASH_SECTOR_7) -1 /* End @ of user Flash area : sector start address + sector size -1 */
 
 #define data_size_adc (4)
 
 /* USER CODE END EC */
-/* Base address of the Flash sectors */
 #define ADDR_FLASH_SECTOR_0 ((uint32_t)0x08000000) /* Base address of Sector 0, 16 Kbytes */
 #define ADDR_FLASH_SECTOR_1 ((uint32_t)0x08004000) /* Base address of Sector 1, 16 Kbytes */
 #define ADDR_FLASH_SECTOR_2 ((uint32_t)0x08008000) /* Base address of Sector 2, 16 Kbytes */
@@ -72,7 +71,13 @@ extern "C"
 #define ADDR_FLASH_SECTOR_5 ((uint32_t)0x08020000) /* Base address of Sector 5, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_6 ((uint32_t)0x08040000) /* Base address of Sector 6, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_7 ((uint32_t)0x08060000) /* Base address of Sector 7, 128 Kbytes */
+
 /* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 /* Flash define */
 #define Flash_Addr_size (4)
 #define Flash_Memory_Empty (0xFFFFFFFF)
@@ -108,8 +113,8 @@ extern "C"
 /* ADC Gain transfer back to float number */
 #define ADC_Driver_Gain (3.3 / 4095)
 
-  /* Exported functions prototypes ---------------------------------------------*/
-  void Error_Handler(void);
+/* Exported functions prototypes ---------------------------------------------*/
+void Error_Handler(void);
 #define Dynmaic_Gain (2)
 
 /* USER CODE BEGIN EFP */
@@ -137,16 +142,23 @@ extern "C"
 #define TCK_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
-  /* USER CODE BEGIN Private defines */
+/*PWM Freq & DUTY*/
+#define PRESCALER_VALUE (uint32_t)(((SystemCoreClock) / 45000000) - 1)
+#define PERIOD_VALUE (uint32_t)(1000 - 1)          /* Period Value  */
+#define PULSE1_VALUE (uint32_t)(1000 / 2)          /* Capture Compare 1 Value  */
+#define PULSE2_VALUE (uint32_t)(1000 * 37.5 / 100) /* Capture Compare 2 Value  */
+#define PULSE3_VALUE (uint32_t)(1000 / 4)          /* Capture Compare 3 Value  */
+#define PULSE4_VALUE (uint32_t)(1000 * 12.5 / 100) /* Capture Compare 4 Value  */
+/*PWM DUTY*/
+#define MAX_DUTY  (680)
+#define MIN_DUTY  (0)
 
-  /* USER CODE END Private defines */
 
+/* USER CODE END Private defines */
   /*條件編譯DEBUG區*/
   // #define DEBUG_MODE_FLASH 1
   //  #define DEBUG_MODE_UART  1
   // #define DEBUG_MODE_UART_ADC_Message 1
-
-
 
 #ifdef __cplusplus
 }
