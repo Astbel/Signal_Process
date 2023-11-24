@@ -152,7 +152,7 @@ void Error_Handler(void);
 /*PWM DUTY*/
 #define  MAX_DUTY             (0x03E8)
 #define  MAX_DUTY_percentage  (0x0064)
-
+#define  Freq_Gain  (1000)
 
 /* USER CODE END Private defines */
   /*條件編譯DEBUG區*/

@@ -67,6 +67,7 @@ extern uint16_t PWM_Duty;
 extern uint16_t Str_PWM;
 extern uint32_t Str_Freq;
 extern uint32_t MAX_DUTY_Calculate;
+extern uint32_t ARR_LAST_TIME_SAVE;
 /*********************Slope method**********************/
 
 

@@ -8,6 +8,7 @@ uint16_t PWM_Duty;
 uint16_t Str_PWM;
 uint32_t Str_Freq;
 uint32_t MAX_DUTY_Calculate;
+uint32_t ARR_LAST_TIME_SAVE;
 /*Flash 變數申明區*/
 
 /*Flash 地址申明區*/

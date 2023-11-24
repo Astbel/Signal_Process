@@ -580,7 +580,14 @@ int16_t Get_position (char *string, UART_HandleTypeDef *uart)
 //
 // Parameter:ring_buffer *buffer 接收端主字串
 //			char Target[]   目標字串
-//
+/**
+ * @brief 
+ * 
+ * @param s   原buffer
+ * @param out 複製buffer
+ * @param p   搜尋起點
+ * @param l   長度
+ */
 void Search_String(char s[], char out[], uint16_t p, uint16_t l)
 {
 	int8_t cnt = 0;				// 取值得計數
@@ -811,6 +818,39 @@ void Reset_Rx_Buffer(void)
 /*PWN變頻區*/
 void PWM_Freq_Chrange(void)
 {
+	char output_Buff[Uart_Buffer];
+
+	if (strncmp(_rx_buffer2->buffer, "Freq", 4) == 0)
+	{
+		int digitPosition = 0; // 十位數默認值
+		char *dutyPosition = strchr(_rx_buffer2->buffer, '\0');
+
+		// 確定百位數或十位數的位置
+		if (*(dutyPosition - 1) != '\0')
+		{
+			dutyPosition--;
+			digitPosition = (*dutyPosition == '0') ? 2 : 3; // 十位數為2，百位數為3
+		}
+
+		Search_String(rx_buffer2.buffer, output_Buff, 4, digitPosition);
+		Str_Freq = atoi(output_Buff);
+
+		// 存入當筆ARR值
+		ARR_LAST_TIME_SAVE = TIM1->ARR;
+		
+		// 跟新Freq
+		Str_Freq = Str_Freq * Freq_Gain;
+		TIM1->ARR = (uint32_t)((SystemCoreClock) / ((TIM1->PSC + 1) * Str_Freq));
+		
+		// 刷新DUTY對應此狀態下的值
+		TIM1->CCR1 = ((TIM1->CCR1 * TIM1->ARR) / ARR_LAST_TIME_SAVE); // 等比跟新DUTY
+		MAX_DUTY_Calculate = TIM1->ARR;								  // 跟新最大DUTY
+	}
+	// 重製Head & Tail & Buffer
+	rx_buffer2.head = 0;
+	rx_buffer2.tail = 0;
+	memset(_rx_buffer2->buffer, '\0', UART_BUFFER_SIZE);
+	memset(output_Buff, '\0', Uart_Buffer);
 }
 
 /*PWM調變DUTY*/
@@ -835,9 +875,12 @@ void PWM_Duty_Charge(void)
 
 		// 更新PWM 這邊因該量測DUTY每一個解析度大小
 		PWM_Duty = ((Str_PWM * MAX_DUTY) / MAX_DUTY_percentage) + 0x032;
+		/*限制Duty max*/
+		if (PWM_Duty > MAX_DUTY)
+			PWM_Duty = MAX_DUTY;
 		TIM1->CCR1 = PWM_Duty;
 	}
-	// 重製buffer
+	// 重製buffer & Head & tail
 	rx_buffer2.head = 0;
 	rx_buffer2.tail = 0;
 	memset(output_Buff, '\0', Uart_Buffer);

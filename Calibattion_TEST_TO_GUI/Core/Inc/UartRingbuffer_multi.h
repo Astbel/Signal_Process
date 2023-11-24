@@ -13,7 +13,7 @@
 
 
 /* change the size of the buffer */
-#define UART_BUFFER_SIZE 1024
+#define UART_BUFFER_SIZE 128
 typedef struct
 {
   unsigned char buffer[UART_BUFFER_SIZE];
