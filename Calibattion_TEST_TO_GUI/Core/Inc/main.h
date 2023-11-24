@@ -150,8 +150,8 @@ void Error_Handler(void);
 #define PULSE3_VALUE (uint32_t)(1000 / 4)          /* Capture Compare 3 Value  */
 #define PULSE4_VALUE (uint32_t)(1000 * 12.5 / 100) /* Capture Compare 4 Value  */
 /*PWM DUTY*/
-#define MAX_DUTY  (680)
-#define MIN_DUTY  (0)
+#define  MAX_DUTY             (0x03E8)
+#define  MAX_DUTY_percentage  (0x0064)
 
 
 /* USER CODE END Private defines */

@@ -3,7 +3,11 @@ struct PFC_VARIABLES PFC_Variables;
 struct Allert_Portect Dyanmic_Portect;
 // 申明變數
 uint32_t Protect_12V, Protect_5V;
-
+/*控制PWM 變數*/
+uint16_t PWM_Duty;
+uint16_t Str_PWM;
+uint32_t Str_Freq;
+uint32_t MAX_DUTY_Calculate;
 /*Flash 變數申明區*/
 
 /*Flash 地址申明區*/

@@ -22,4 +22,8 @@ extern void OTP_Protect_Event(void);
 extern void OCP_Protect_Event(void);
 extern void OVP_Protect_Event(void);
 extern void Black_Box_Write_Message_Status(void);
+/*PWM 調變區*/
+extern void PWM_Freq_Chrange(void);
+extern void PWM_Duty_Charge(void);
+
 #endif

@@ -62,6 +62,11 @@ extern uint32_t Data_12V_Max_Addr;
 extern uint32_t Data_OTP_Addr;
 extern uint32_t Data_OCP_Addr;
 extern uint32_t Data_OVP_Addr;
+
+extern uint16_t PWM_Duty;
+extern uint16_t Str_PWM;
+extern uint32_t Str_Freq;
+extern uint32_t MAX_DUTY_Calculate;
 /*********************Slope method**********************/
 
 

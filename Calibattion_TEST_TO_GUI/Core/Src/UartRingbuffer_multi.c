@@ -742,7 +742,7 @@ void Black_Box_Write_Message_Status(void)
 	uint32_t ocp_boolean = Dyanmic_Portect.OCP;
 	uint32_t ovp_boolean = Dyanmic_Portect.OVP;
 	// Uart buffer 傳送至serial message 端顯示當前狀態列ex 是什麼保護
-	
+
 	sprintf(buffer, "otp is %d, ocp is %d\n", otp_boolean, ocp_boolean);
 	Uart_sendstring(buffer, pc_uart);
 
@@ -765,6 +765,7 @@ CommandEntry commandTable[] = {
 	{"Black Box Status", Black_Box_Write_Message_Status},
 	// below is testing the calibration
 	{"Test Value is", Serial_Slopping_Method},
+	{"PWM", PWM_Duty_Charge}
 	// 添加其他命令...
 };
 
@@ -795,6 +796,7 @@ void Get_Command_From_C_shrap(void)
 		// 執行完後呼叫清空環型緩衝 指標 以及 buffer
 		Reset_Rx_Buffer();
 	}
+	// PWM_Duty_Charge();
 }
 
 /*重制圓形緩衝buffer和head和tail*/
@@ -805,4 +807,38 @@ void Reset_Rx_Buffer(void)
 	_rx_buffer2->head = 0;
 	_rx_buffer2->tail = 0;
 	Process_Excecuted_Flag = False;
+}
+
+/*PWN變頻區*/
+void PWM_Freq_Chrange(void)
+{
+}
+
+/*PWM調變DUTY*/
+void PWM_Duty_Charge(void)
+{
+	/*buff*/
+	// char output_Buff[Uart_Buffer];
+
+	// if (strncmp(_rx_buffer1->buffer, "Duty", 4) == 0)
+	// {
+	// 	int digitPosition = 0; // 十位數默認值
+	// 	char *dutyPosition = strchr(_rx_buffer1->buffer, '\0');
+
+	// 	// 確定百位數或十位數的位置
+	// 	if (*(dutyPosition - 1) != '\0')
+	// 	{
+	// 		dutyPosition--;
+	// 		digitPosition = (*dutyPosition == '0') ? 2 : 3; // 十位數為2，百位數為3
+	// 	}
+
+	// 	Search_String(rx_buffer1.buffer, output_Buff, 4, digitPosition);
+	// 	Str_PWM = atoi(output_Buff);
+
+	// 	// 更新PWM
+	// 	PWM_Duty = ((Str_PWM * MAX_DUTY_Calculate) / MAX_DUTY_percentage) + 0x032;
+	// 	TIM1->CCR1 = PWM_Duty;
+	// }
+	Uart_sendstring("TEST switch duty",pc_uart);
+	TIM1->CCR1=100;
 }
