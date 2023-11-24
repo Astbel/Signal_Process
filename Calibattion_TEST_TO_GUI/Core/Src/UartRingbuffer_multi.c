@@ -765,7 +765,7 @@ CommandEntry commandTable[] = {
 	{"Black Box Status", Black_Box_Write_Message_Status},
 	// below is testing the calibration
 	{"Test Value is", Serial_Slopping_Method},
-	{"PWM", PWM_Duty_Charge}
+	// {"PWM", PWM_Duty_Charge}
 	// 添加其他命令...
 };
 
@@ -796,7 +796,6 @@ void Get_Command_From_C_shrap(void)
 		// 執行完後呼叫清空環型緩衝 指標 以及 buffer
 		Reset_Rx_Buffer();
 	}
-	// PWM_Duty_Charge();
 }
 
 /*重制圓形緩衝buffer和head和tail*/
@@ -817,28 +816,30 @@ void PWM_Freq_Chrange(void)
 /*PWM調變DUTY*/
 void PWM_Duty_Charge(void)
 {
-	/*buff*/
-	// char output_Buff[Uart_Buffer];
+	char output_Buff[Uart_Buffer];
+	// 檢查是否接收到"Duty"命令
+	if (strncmp(_rx_buffer2->buffer, "Duty", 4) == 0)
+	{
+		int digitPosition = 0; // 十位數默認值
+		char *dutyPosition = strchr(_rx_buffer2->buffer, '\0');
 
-	// if (strncmp(_rx_buffer1->buffer, "Duty", 4) == 0)
-	// {
-	// 	int digitPosition = 0; // 十位數默認值
-	// 	char *dutyPosition = strchr(_rx_buffer1->buffer, '\0');
+		// 確定百位數或十位數的位置
+		if (*(dutyPosition - 1) != '\0')
+		{
+			dutyPosition--;
+			digitPosition = (*dutyPosition == '0') ? 2 : 3; // 十位數為2，百位數為3
+		}
 
-	// 	// 確定百位數或十位數的位置
-	// 	if (*(dutyPosition - 1) != '\0')
-	// 	{
-	// 		dutyPosition--;
-	// 		digitPosition = (*dutyPosition == '0') ? 2 : 3; // 十位數為2，百位數為3
-	// 	}
+		Search_String(rx_buffer2.buffer, output_Buff, 4, digitPosition);
+		Str_PWM = atoi(output_Buff);
 
-	// 	Search_String(rx_buffer1.buffer, output_Buff, 4, digitPosition);
-	// 	Str_PWM = atoi(output_Buff);
-
-	// 	// 更新PWM
-	// 	PWM_Duty = ((Str_PWM * MAX_DUTY_Calculate) / MAX_DUTY_percentage) + 0x032;
-	// 	TIM1->CCR1 = PWM_Duty;
-	// }
-	Uart_sendstring("TEST switch duty",pc_uart);
-	TIM1->CCR1=100;
+		// 更新PWM 這邊因該量測DUTY每一個解析度大小
+		PWM_Duty = ((Str_PWM * MAX_DUTY) / MAX_DUTY_percentage) + 0x032;
+		TIM1->CCR1 = PWM_Duty;
+	}
+	// 重製buffer
+	rx_buffer2.head = 0;
+	rx_buffer2.tail = 0;
+	memset(output_Buff, '\0', Uart_Buffer);
+	memset(_rx_buffer2->buffer, '\0', UART_BUFFER_SIZE);
 }
