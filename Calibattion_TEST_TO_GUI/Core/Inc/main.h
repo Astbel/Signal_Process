@@ -153,7 +153,8 @@ void Error_Handler(void);
 #define  MAX_DUTY             (0x03E8)
 #define  MAX_DUTY_percentage  (0x0064)
 #define  Freq_Gain  (1000)
-
+/*SineWave OffSET for negative side*/
+#define SINE_PWM_OFFSET (1000)
 /* USER CODE END Private defines */
   /*條件編譯DEBUG區*/
   // #define DEBUG_MODE_FLASH 1

@@ -85,15 +85,29 @@ static int sine_cnt;
 static int inverse_sine_cnt;
 static int phase_state;
 /*Sine Table*/
-const uint16_t sine_table[89] =
-    {
-        0, 18, 34, 52, 70, 87, 105, 122, 140, 156, 174, 191, 208, 225, 242,
-        259, 276, 292, 309, 325, 342, 359, 375, 391, 407, 423, 438, 454, 469,
-        485, 500, 515, 530, 545, 559, 573, 588, 602, 616, 529, 643, 656, 669,
-        682, 695, 707, 719, 731, 743, 755, 766, 777, 788, 799, 809, 819, 829,
-        839, 848, 858, 875, 883, 891, 899, 906, 914, 921, 927, 934, 940, 946,
-        951, 956, 961, 966, 970, 974, 978, 982, 985, 988, 990, 993, 995, 996,
-        998, 999, 999, 1000};
+const uint16_t sine_table[129] = {
+    0, 12, 24, 36, 49, 61, 73, 85, 98, 110,
+    122, 134, 146, 158, 170, 183, 195, 207, 219, 231,
+    242, 254, 266, 278, 290, 302, 313, 325, 336, 348,
+    359, 371, 382, 393, 405, 416, 427, 438, 449, 460,
+    471, 482, 492, 503, 514, 524, 534, 545, 555, 565,
+    575, 585, 595, 605, 615, 624, 634, 643, 653, 662,
+    671, 680, 689, 698, 707, 715, 724, 732, 740, 749,
+    757, 765, 773, 780, 788, 795, 803, 810, 817, 824,
+    831, 838, 844, 851, 857, 863, 870, 876, 881, 887,
+    893, 898, 903, 909, 914, 919, 923, 928, 932, 937,
+    941, 945, 949, 953, 956, 960, 963, 966, 970, 972,
+    975, 978, 980, 983, 985, 987, 989, 990, 992, 993,
+    995, 996, 997, 998, 998, 999, 999, 999, 1000};
+// const uint16_t sine_table[89] =
+//     {
+//         0, 18, 34, 52, 70, 87, 105, 122, 140, 156, 174, 191, 208, 225, 242,
+//         259, 276, 292, 309, 325, 342, 359, 375, 391, 407, 423, 438, 454, 469,
+//         485, 500, 515, 530, 545, 559, 573, 588, 602, 616, 529, 643, 656, 669,
+//         682, 695, 707, 719, 731, 743, 755, 766, 777, 788, 799, 809, 819, 829,
+//         839, 848, 858, 875, 883, 891, 899, 906, 914, 921, 927, 934, 940, 946,
+//         951, 956, 961, 966, 970, 974, 978, 982, 985, 988, 990, 993, 995, 996,
+//         998, 999, 999, 1000};
 
 /**
  * @brief  The application entry point.
@@ -153,7 +167,7 @@ int main(void)
   Rxval = Flash_Read_NUM(0x0800D100);
 #endif
   /* Start ISR */
-  // HAL_TIM_Base_Start_IT(&htim10);
+  HAL_TIM_Base_Start_IT(&htim10);
   /*PWM POEN*/
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -168,24 +182,63 @@ int main(void)
     }
 #endif
     /* USER CODE END WHILE */
-    SPWM_Method();
+    // SPWM_Method();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
+
 void SPWM_Method(void)
 {
-  // Adjust the speed to control the frequency of the sine wave
-  uint16_t frequency_multiplier = 4; // Adjust this value as needed
+  // Phase1
+  if (phase_state == 1)
+  {
+    if (sine_cnt == 127)
+      phase_state = 2;
 
-  // Update the sine wave counter based on the phase and frequency multiplier
-  sine_cnt = (sine_cnt + (phase_state % 2 == 0 ? -1 : 1) * frequency_multiplier) % 89;
+    else
+      sine_cnt++;
 
-  // Update the PWM duty cycle
-  TIM1->CCR1 = sine_table[sine_cnt];
+    // SPWM_OUT = SINE_PWM_OFFSET + sine_table[sine_cnt];
+    SPWM_OUT = sine_table[sine_cnt];
+  }
+  // Phase2
+  else if (phase_state == 2)
+  {
+    if (sine_cnt == 0)
+      phase_state = 3;
 
-  // Update the phase state
-  phase_state = (phase_state % 4) + 1;
+    else
+      sine_cnt--;
+
+    // SPWM_OUT = SINE_PWM_OFFSET + sine_table[sine_cnt];
+    SPWM_OUT =  sine_table[sine_cnt];
+  }
+  // Phase3
+  else if (phase_state == 3)
+  {
+
+    if (sine_cnt == 127)
+      phase_state = 4;
+    else
+      sine_cnt++;
+
+    SPWM_OUT = SINE_PWM_OFFSET - sine_table[sine_cnt];
+  }
+  // Phase4
+  else if (phase_state == 4)
+  {
+
+    if (sine_cnt == 0)
+      phase_state = 1;
+    else
+      sine_cnt--;
+
+    SPWM_OUT = SINE_PWM_OFFSET - sine_table[sine_cnt];
+  }
+  // SPWM_OUT = SPWM_OUT >> 10;
+
+  TIM1->CCR1 = SPWM_OUT;
 }
 /**
  * @brief System Clock Configuration
@@ -379,9 +432,9 @@ static void MX_TIM10_Init(void)
 
   /* USER CODE END TIM10_Init 1 */
   htim10.Instance = TIM10;
-  htim10.Init.Prescaler = 10625 - 1;
+  htim10.Init.Prescaler = 18000 - 1;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim10.Init.Period = 16000 - 1;
+  htim10.Init.Period = 18000 - 1;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)

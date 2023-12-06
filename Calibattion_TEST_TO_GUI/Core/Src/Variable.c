@@ -19,6 +19,7 @@ uint32_t Data_12V_Max_Addr;
 uint32_t Data_OTP_Addr;
 uint32_t Data_OCP_Addr;
 uint32_t Data_OVP_Addr;
+uint16_t SPWM_OUT;
 /*
  * 初始化變數變量
  * 請區分 所有結構體 為一組 以利於分辨
