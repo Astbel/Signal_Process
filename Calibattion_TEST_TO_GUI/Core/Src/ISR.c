@@ -10,8 +10,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
         // C# LOG獲得命令
         // Get_Command_From_C_shrap();
-
-        // PWM_Duty_Freq_Change();
+        
         PWM_Duty_Freq_Dual_Channel();
         // SPWM_Method();
     }

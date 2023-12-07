@@ -151,6 +151,7 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 /*PWM Freq & DUTY*/
 #define PRESCALER_VALUE (uint32_t)(((SystemCoreClock) / 45000000) - 1)
+// #define PRESCALER_VALUE_2 (uint32_t)(((SystemCoreClock) / 90000000) - 1)
 #define PERIOD_VALUE (uint32_t)(1000 - 1)          /* Period Value  */
 #define PULSE1_VALUE (uint32_t)(1000 / 2)          /* Capture Compare 1 Value  */
 #define PULSE2_VALUE (uint32_t)(1000 * 37.5 / 100) /* Capture Compare 2 Value  */
@@ -162,6 +163,7 @@ void Error_Handler(void);
 #define MAX_DUTY_percentage (0x0064)
 #define PWM_offset (0x032)
 #define Freq_Gain (1000)
+#define Freq_Gain_CH2 (1000)
 /*SineWave OffSET for negative side*/
 #define SINE_PWM_OFFSET (1000)
   /* USER CODE END Private defines */
