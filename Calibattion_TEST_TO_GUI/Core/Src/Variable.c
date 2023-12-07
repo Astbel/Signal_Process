@@ -21,6 +21,10 @@ uint32_t Data_OCP_Addr;
 uint32_t Data_OVP_Addr;
 uint16_t SPWM_OUT;
 uint16_t PWM_Channel;
+
+/*顯示GUI傳參*/
+uint16_t mointer_Freq;
+float  mointer_Duty;
 /*
  * 初始化變數變量
  * 請區分 所有結構體 為一組 以利於分辨

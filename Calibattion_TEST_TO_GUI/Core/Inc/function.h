@@ -25,4 +25,9 @@ extern void Black_Box_Write_Message_Status(void);
 /*PWM 調變區*/
 extern void SPWM_Method(void);
 extern void PWM_Duty_Freq_Dual_Channel(void);
+/*Display 訊息*/
+extern void Display_Wavefrom_Message(void);
+/*C# CMD*/
+extern void BTN_Control_PWM_OM(void);
+extern void BTN_Control_PWM_OFF(void);
 #endif

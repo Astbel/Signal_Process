@@ -26,7 +26,6 @@ struct Allert_Portect
     uint8_t OVP;
     uint8_t OCP;
     uint8_t OTP;
-
 };
 // Flash 結構體
 struct Flash_Dynamic
@@ -70,7 +69,9 @@ extern uint32_t MAX_DUTY_Calculate;
 extern uint32_t ARR_LAST_TIME_SAVE;
 /*SPWM output*/
 extern uint16_t SPWM_OUT;
+/*Mointer*/
+extern uint16_t mointer_Freq;
+extern float    mointer_Duty;
 /*********************Slope method**********************/
-
 
 #endif

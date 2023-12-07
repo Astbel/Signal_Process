@@ -44,6 +44,9 @@ extern "C" {
   extern UART_HandleTypeDef huart2;
   extern UART_HandleTypeDef huart3;
   extern TIM_HandleTypeDef htim10;
+  extern TIM_HandleTypeDef htim1;
+  extern TIM_HandleTypeDef htim2;
+  extern TIM_HandleTypeDef htim3;
   extern ADC_HandleTypeDef hadc1;
   extern FLASH_EraseInitTypeDef flashstruct;
 
@@ -151,7 +154,7 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 /*PWM Freq & DUTY*/
 #define PRESCALER_VALUE (uint32_t)(((SystemCoreClock) / 45000000) - 1)
-// #define PRESCALER_VALUE_2 (uint32_t)(((SystemCoreClock) / 90000000) - 1)
+#define PRESCALER_VALUE_2 (uint32_t)(((SystemCoreClock) / 90000000) - 1)
 #define PERIOD_VALUE (uint32_t)(1000 - 1)          /* Period Value  */
 #define PULSE1_VALUE (uint32_t)(1000 / 2)          /* Capture Compare 1 Value  */
 #define PULSE2_VALUE (uint32_t)(1000 * 37.5 / 100) /* Capture Compare 2 Value  */

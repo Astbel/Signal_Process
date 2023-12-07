@@ -814,9 +814,28 @@ void Reset_Rx_Buffer(void)
 	_rx_buffer2->tail = 0;
 	Process_Excecuted_Flag = False;
 }
+/* PWM ON */
+void BTN_Control_PWM_OM(void)
+{
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+}
+/* PWM OFF */
+void BTN_Control_PWM_OFF(void)
+{
+	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+}
+
+/*回傳當前PWM資訊至Mointer上*/
+void Display_Wavefrom_Message(void)
+{
+	/*打印當前channel的Duty 和 Freq*/
+	char buffer[100];
+	sprintf(buffer, "Channel Duty is %f,Channel Freq is %d", mointer_Duty, mointer_Freq);
+	Uart_sendstring(buffer, pc_uart);
+}
 
 /**
- * @brief
+ * @brief  Channel 2頻率異常待調查
  *
  */
 void PWM_Duty_Freq_Dual_Channel(void)
@@ -874,7 +893,11 @@ void PWM_Duty_Freq_Dual_Channel(void)
 					PWM_Duty = MAX_DUTY;
 				/*判別Channel才跟新對應channel*/
 				if (PWM_Channel == 1)
+				{
 					TIM1->CCR1 = PWM_Duty;
+					/*紀錄mointer duty*/
+					mointer_Duty = (float)(PWM_Duty / MAX_DUTY);
+				}
 				else if (PWM_Channel == 2)
 				{
 					// offset 補正
@@ -891,6 +914,8 @@ void PWM_Duty_Freq_Dual_Channel(void)
 					// 存入當筆 ARR 值
 					ARR_LAST_TIME_SAVE = TIM1->ARR;
 					// 跟新 Freq
+					/*紀錄mointer Freq*/
+					mointer_Freq = Str_Freq;
 					Str_Freq = Str_Freq * Freq_Gain;
 					TIM1->ARR = (uint32_t)((SystemCoreClock) / ((TIM1->PSC + 1) * Str_Freq));
 
@@ -908,6 +933,7 @@ void PWM_Duty_Freq_Dual_Channel(void)
 					ARR_LAST_TIME_SAVE = TIM2->ARR;
 					// 跟新 Freq
 					Str_Freq = Str_Freq * Freq_Gain_CH2;
+
 					TIM2->ARR = (uint32_t)((SystemCoreClock) / ((TIM2->PSC + 1) * Str_Freq));
 
 					// 計算新的 PWM_Duty

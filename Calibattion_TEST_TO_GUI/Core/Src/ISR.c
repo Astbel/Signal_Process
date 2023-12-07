@@ -13,5 +13,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         
         PWM_Duty_Freq_Dual_Channel();
         // SPWM_Method();
+        Display_Wavefrom_Message();
     }
 }
