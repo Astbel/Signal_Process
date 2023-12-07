@@ -23,7 +23,8 @@
 #define __MAIN_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -37,10 +38,10 @@ extern "C" {
 #include "stdlib.h"
 #include "FLASH_SECTOR_F4.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
+  /* Private includes ----------------------------------------------------------*/
+  /* USER CODE BEGIN Includes */
 
-/* USER CODE END Includes */
+  /* USER CODE END Includes */
   extern UART_HandleTypeDef huart2;
   extern UART_HandleTypeDef huart3;
   extern TIM_HandleTypeDef htim10;
@@ -72,12 +73,12 @@ extern "C" {
 #define ADDR_FLASH_SECTOR_6 ((uint32_t)0x08040000) /* Base address of Sector 6, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_7 ((uint32_t)0x08060000) /* Base address of Sector 7, 128 Kbytes */
 
-/* Exported macro ------------------------------------------------------------*/
-/* USER CODE BEGIN EM */
+  /* Exported macro ------------------------------------------------------------*/
+  /* USER CODE BEGIN EM */
 
-/* USER CODE END EM */
+  /* USER CODE END EM */
 
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+  void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 /* Flash define */
 #define Flash_Addr_size (4)
 #define Flash_Memory_Empty (0xFFFFFFFF)
@@ -92,19 +93,17 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 #define Flash_Addr_OCP (0x0800C150)
 #define Flash_Addr_OVP (0x0800C160)
 /*兩點校正MAX MIN*/
-#define MAX_5V   (20)
-#define MIN_5V   (0)
-#define MAX_12V  (100)
-#define MIN_12V  (0)
+#define MAX_5V (20)
+#define MIN_5V (0)
+#define MAX_12V (100)
+#define MIN_12V (0)
 /*Flash Test Define value*/
-#define Flash_5V_Max_Hex  (2201)
-#define Flash_5V_Min_Hex  (23)
+#define Flash_5V_Max_Hex (2201)
+#define Flash_5V_Min_Hex (23)
 #define Flash_12V_Max_Hex (3986)
 #define Flash_12V_Min_Hex (23)
 /*Flash 縮放增益因為int型別在C上計算要放大的關西*/
 #define Flash_Gain (1000)
-
-
 
 /*傳輸buffer 大小配置*/
 #define Uart_Buffer (200)
@@ -113,8 +112,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 /* ADC Gain transfer back to float number */
 #define ADC_Driver_Gain (3.3 / 4095)
 
-/* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
+  /* Exported functions prototypes ---------------------------------------------*/
+  void Error_Handler(void);
 #define Dynmaic_Gain (2)
 
 /* USER CODE BEGIN EFP */
@@ -154,12 +153,13 @@ void Error_Handler(void);
 #define PULSE3_VALUE (uint32_t)(1000 / 4)          /* Capture Compare 3 Value  */
 #define PULSE4_VALUE (uint32_t)(1000 * 12.5 / 100) /* Capture Compare 4 Value  */
 /*PWM DUTY*/
-#define  MAX_DUTY             (0x03E8)
-#define  MAX_DUTY_percentage  (0x0064)
-#define  Freq_Gain  (1000)
+#define MAX_DUTY (0x03E8)
+#define MAX_DUTY_percentage (0x0064)
+#define PWM_offset (0x032)
+#define Freq_Gain (1000)
 /*SineWave OffSET for negative side*/
 #define SINE_PWM_OFFSET (1000)
-/* USER CODE END Private defines */
+  /* USER CODE END Private defines */
   /*條件編譯DEBUG區*/
   // #define DEBUG_MODE_FLASH 1
   //  #define DEBUG_MODE_UART  1

@@ -944,7 +944,7 @@ void PWM_Duty_Freq_Dual_Channel(void)
 			{
 				Str_PWM = atoi(output_Buff);
 				// 更新 PWM
-				PWM_Duty = ((Str_PWM * TIM1->ARR) / MAX_DUTY_percentage) + 0x032;
+				PWM_Duty = ((Str_PWM * TIM1->ARR) / MAX_DUTY_percentage);
 				/* 限制 Duty max */
 				if (PWM_Duty > MAX_DUTY)
 					PWM_Duty = MAX_DUTY;
