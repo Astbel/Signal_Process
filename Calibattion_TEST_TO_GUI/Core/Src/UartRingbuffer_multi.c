@@ -897,7 +897,7 @@ void PWM_Duty_Freq_Change(void)
 void PWM_Duty_Freq_Dual_Channel(void)
 {
 	char output_Buff[Uart_Buffer];
-
+	char channel_Buff[10];
 	/*判別字串組是否開頭為CH如果不是則直接清空buffer*/
 	/*strncmp 檢測字串組開頭是否為CH如果為真才跟新*/
 	if (strncmp(_rx_buffer2->buffer, "CH", 2) == true)
@@ -906,18 +906,22 @@ void PWM_Duty_Freq_Dual_Channel(void)
 		int channel = 1;
 		int search_string_start = 2;
 		/*字串搜索*/
-		Search_String(rx_buffer2.buffer, output_Buff, search_string_start, channel);
+		Search_String(rx_buffer2.buffer, channel_Buff, search_string_start, channel);
 		/*紀錄當前Channel*/
-		PWM_Channel = atoi(output_Buff);
+		PWM_Channel = atoi(channel_Buff);
+		memset(channel_Buff, '\0', 10);
+		/*打印當前channel*/
+		char buffer[10];
+		sprintf(buffer, "Channel is %d", PWM_Channel);
+		Uart_sendstring(buffer, pc_uart);
 
 		/*移除前三個字組*/
 		size_t len = strlen(_rx_buffer2->buffer);
 		size_t buffer_size = sizeof(_rx_buffer2->buffer);
 		// 在確保有足夠的字元數量後，進行 memmove 操作
-		
+
 		if (buffer_size > 3)
 			memmove(_rx_buffer2->buffer, _rx_buffer2->buffer + 3, len - 3 + 1); // +1 包含 null 終止符號
-		
 
 		/*如果要這樣判別就要把前面判別完的從buffer內移除,確認字串是DUTY還是FREQ*/
 		if (strncmp(_rx_buffer2->buffer, "Duty", 4) == true || strncmp(_rx_buffer2->buffer, "Freq", 4) == true)
@@ -929,13 +933,10 @@ void PWM_Duty_Freq_Dual_Channel(void)
 
 			// 確定百位數或十位數的位置
 			if (cmdLength > 4 && _rx_buffer2->buffer[cmdLength - 2] == '0')
-			{
 				digitPosition = 2; // 十位數為2
-			}
 			else
-			{
 				digitPosition = 3; // 百位數為3或者個位數
-			}
+			
 
 			Search_String(rx_buffer2.buffer, output_Buff, 4, digitPosition);
 
@@ -949,15 +950,10 @@ void PWM_Duty_Freq_Dual_Channel(void)
 					PWM_Duty = MAX_DUTY;
 				/*判別Channel才跟新對應channel*/
 				if (PWM_Channel == 1)
-				{
 					TIM1->CCR1 = PWM_Duty;
-					PWM_Channel =0;
-				}
-				else
-				{
+				else if (PWM_Channel == 2)
 					TIM1->CCR2 = PWM_Duty;
-					PWM_Channel =0;
-				}
+				
 			}
 			else if (strncmp(_rx_buffer2->buffer, "Freq", 4) == true)
 			{
@@ -979,9 +975,8 @@ void PWM_Duty_Freq_Dual_Channel(void)
 
 					MAX_DUTY_Calculate = TIM1->ARR; // 跟新最大 DUTY
 
-					PWM_Channel =0;
 				}
-				else
+				else if (PWM_Channel == 2)
 				{
 					// 存入當筆 ARR 值
 					ARR_LAST_TIME_SAVE = TIM1->ARR;
@@ -997,7 +992,6 @@ void PWM_Duty_Freq_Dual_Channel(void)
 
 					MAX_DUTY_Calculate = TIM1->ARR; // 跟新最大 DUTY
 
-					PWM_Channel =0;
 				}
 			}
 		}
@@ -1006,8 +1000,6 @@ void PWM_Duty_Freq_Dual_Channel(void)
 	// 重製 buffer & Head & tail,包括失敗以及非法字串時
 	rx_buffer2.head = 0;
 	rx_buffer2.tail = 0;
-	PWM_Channel =0;
 	memset(output_Buff, '\0', Uart_Buffer);
 	memset(_rx_buffer2->buffer, '\0', UART_BUFFER_SIZE);
-	
 }
