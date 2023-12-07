@@ -23,8 +23,7 @@
 #define __MAIN_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -38,10 +37,10 @@ extern "C"
 #include "stdlib.h"
 #include "FLASH_SECTOR_F4.h"
 
-  /* Private includes ----------------------------------------------------------*/
-  /* USER CODE BEGIN Includes */
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 
-  /* USER CODE END Includes */
+/* USER CODE END Includes */
   extern UART_HandleTypeDef huart2;
   extern UART_HandleTypeDef huart3;
   extern TIM_HandleTypeDef htim10;
@@ -55,6 +54,7 @@ extern "C"
 /* USER CODE END ET */
 #define device_uart &huart2
 #define pc_uart &huart3
+
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 // 記憶體儲存地???????
@@ -73,12 +73,12 @@ extern "C"
 #define ADDR_FLASH_SECTOR_6 ((uint32_t)0x08040000) /* Base address of Sector 6, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_7 ((uint32_t)0x08060000) /* Base address of Sector 7, 128 Kbytes */
 
-  /* Exported macro ------------------------------------------------------------*/
-  /* USER CODE BEGIN EM */
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
 
-  /* USER CODE END EM */
+/* USER CODE END EM */
 
-  void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 /* Flash define */
 #define Flash_Addr_size (4)
 #define Flash_Memory_Empty (0xFFFFFFFF)
@@ -116,6 +116,9 @@ extern "C"
   void Error_Handler(void);
 #define Dynmaic_Gain (2)
 
+/* Exported functions prototypes ---------------------------------------------*/
+void Error_Handler(void);
+
 /* USER CODE BEGIN EFP */
 /*Boolean define*/
 #define True (1)
@@ -145,6 +148,7 @@ extern "C"
 #define TCK_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
+/* USER CODE BEGIN Private defines */
 /*PWM Freq & DUTY*/
 #define PRESCALER_VALUE (uint32_t)(((SystemCoreClock) / 45000000) - 1)
 #define PERIOD_VALUE (uint32_t)(1000 - 1)          /* Period Value  */
@@ -152,6 +156,7 @@ extern "C"
 #define PULSE2_VALUE (uint32_t)(1000 * 37.5 / 100) /* Capture Compare 2 Value  */
 #define PULSE3_VALUE (uint32_t)(1000 / 4)          /* Capture Compare 3 Value  */
 #define PULSE4_VALUE (uint32_t)(1000 * 12.5 / 100) /* Capture Compare 4 Value  */
+
 /*PWM DUTY*/
 #define MAX_DUTY (0x03E8)
 #define MAX_DUTY_percentage (0x0064)

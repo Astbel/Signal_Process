@@ -25,6 +25,8 @@
 "calibattion_test_to_gui\stm32f4xx_hal_cortex.o"
 "calibattion_test_to_gui\stm32f4xx_hal.o"
 "calibattion_test_to_gui\stm32f4xx_hal_exti.o"
+"calibattion_test_to_gui\stm32f4xx_hal_dac.o"
+"calibattion_test_to_gui\stm32f4xx_hal_dac_ex.o"
 "calibattion_test_to_gui\stm32f4xx_hal_tim.o"
 "calibattion_test_to_gui\stm32f4xx_hal_tim_ex.o"
 "calibattion_test_to_gui\stm32f4xx_hal_uart.o"
