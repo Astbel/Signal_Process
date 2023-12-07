@@ -163,27 +163,17 @@
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PWM_Duty</ItemText>
+          <ItemText>sine_cnt</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Str_Freq</ItemText>
+          <ItemText>phase_state</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>SPWM_OUT</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>sine_cnt</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>phase_state</ItemText>
+          <ItemText>PWM_Channel</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

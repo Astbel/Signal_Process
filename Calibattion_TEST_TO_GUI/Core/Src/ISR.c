@@ -12,6 +12,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         // Get_Command_From_C_shrap();
 
         // PWM_Duty_Freq_Change();
-        SPWM_Method();
+        PWM_Duty_Freq_Dual_Channel();
+        // SPWM_Method();
     }
 }

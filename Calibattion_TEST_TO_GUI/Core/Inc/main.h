@@ -121,6 +121,10 @@ void Error_Handler(void);
 /*Boolean define*/
 #define True (1)
 #define False (0)
+/*Revarse Boolean*/
+#define true (0)
+#define false (1)
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

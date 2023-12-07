@@ -25,4 +25,5 @@ extern void Black_Box_Write_Message_Status(void);
 /*PWM 調變區*/
 extern void PWM_Duty_Freq_Change(void);
 extern void SPWM_Method(void);
+extern void PWM_Duty_Freq_Dual_Channel(void);
 #endif

@@ -13,7 +13,7 @@ extern struct Flash_Dynamic Flash_Memory;
 typedef void (*CommandHandler)(void);
 /***********************Flash**********************/
 // 測試函數 變數宣告
-
+extern uint16_t PWM_Channel;
 // 正式使用函數 變數宣告
 
 /********************STRUCT***************************/
