@@ -45,6 +45,7 @@ extern "C"
   extern UART_HandleTypeDef huart2;
   extern UART_HandleTypeDef huart3;
   extern TIM_HandleTypeDef htim10;
+  extern TIM_HandleTypeDef htim1;
   extern ADC_HandleTypeDef hadc1;
   extern FLASH_EraseInitTypeDef flashstruct;
 
@@ -120,7 +121,7 @@ extern "C"
 /*Boolean define*/
 #define True (1)
 #define False (0)
-/*Revarse Boolean*/
+/*Strncmp Boolean*/
 #define true (0)
 #define false (1)
 

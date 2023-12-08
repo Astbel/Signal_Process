@@ -824,7 +824,7 @@ void PWM_Duty_Freq_Change(void)
 	char output_Buff[Uart_Buffer];
 
 	/*檢測前面字串判別channel*/
-	if (strncmp(_rx_buffer2->buffer, "CH", 2) == 0)
+	if (strncmp(_rx_buffer2->buffer, "CH", 2) == true)
 	{
 		int channel = 1;
 		int search_string_start = 2;
@@ -835,7 +835,7 @@ void PWM_Duty_Freq_Change(void)
 	}
 
 	// 檢查是否接收到有效命令
-	if (strncmp(_rx_buffer2->buffer, "Duty", 4) == 0 || strncmp(_rx_buffer2->buffer, "Freq", 4) == 0)
+	if (strncmp(_rx_buffer2->buffer, "Duty", 4) == true || strncmp(_rx_buffer2->buffer, "Freq", 4) == true)
 	{
 		int digitPosition = 0;
 
@@ -854,7 +854,7 @@ void PWM_Duty_Freq_Change(void)
 
 		Search_String(rx_buffer2.buffer, output_Buff, 4, digitPosition);
 
-		if (strncmp(_rx_buffer2->buffer, "Duty", 4) == 0)
+		if (strncmp(_rx_buffer2->buffer, "Duty", 4) == true)
 		{
 			Str_PWM = atoi(output_Buff);
 			// 更新 PWM
@@ -864,12 +864,13 @@ void PWM_Duty_Freq_Change(void)
 				PWM_Duty = MAX_DUTY;
 			TIM1->CCR1 = PWM_Duty;
 		}
-		else if (strncmp(_rx_buffer2->buffer, "Freq", 4) == 0)
+		else if (strncmp(_rx_buffer2->buffer, "Freq", 4) == true)
 		{
 			Str_Freq = atoi(output_Buff);
 			// 存入當筆 ARR 值
 			ARR_LAST_TIME_SAVE = TIM1->ARR;
-			// 跟新 Freq
+			// 跟新 Freq 紀錄當前Freq
+			mointer_Freq = Str_Freq;
 			Str_Freq = Str_Freq * Freq_Gain;
 			TIM1->ARR = (uint32_t)((SystemCoreClock) / ((TIM1->PSC + 1) * Str_Freq));
 
@@ -936,7 +937,6 @@ void PWM_Duty_Freq_Dual_Channel(void)
 				digitPosition = 2; // 十位數為2
 			else
 				digitPosition = 3; // 百位數為3或者個位數
-			
 
 			Search_String(rx_buffer2.buffer, output_Buff, 4, digitPosition);
 
@@ -946,14 +946,19 @@ void PWM_Duty_Freq_Dual_Channel(void)
 				// 更新 PWM
 				PWM_Duty = ((Str_PWM * TIM1->ARR) / MAX_DUTY_percentage);
 				/* 限制 Duty max */
-				if (PWM_Duty > MAX_DUTY)
-					PWM_Duty = MAX_DUTY;
+				if (PWM_Duty > MAX_DUTY_Calculate)
+					PWM_Duty = MAX_DUTY_Calculate;
 				/*判別Channel才跟新對應channel*/
 				if (PWM_Channel == 1)
+				{
+					// Max Duty要隨著Freq跟換最大上限否則傳輸資料會錯誤
+					mointer_Duty = (float)PWM_Duty / MAX_DUTY_Calculate;
 					TIM1->CCR1 = PWM_Duty;
+				}
 				else if (PWM_Channel == 2)
+				{
 					TIM1->CCR2 = PWM_Duty;
-				
+				}
 			}
 			else if (strncmp(_rx_buffer2->buffer, "Freq", 4) == true)
 			{
@@ -963,7 +968,8 @@ void PWM_Duty_Freq_Dual_Channel(void)
 				{
 					// 存入當筆 ARR 值
 					ARR_LAST_TIME_SAVE = TIM1->ARR;
-					// 跟新 Freq
+					// 跟新 Freq 紀錄當前Freq
+					mointer_Freq = Str_Freq;
 					Str_Freq = Str_Freq * Freq_Gain;
 					TIM1->ARR = (uint32_t)((SystemCoreClock) / ((TIM1->PSC + 1) * Str_Freq));
 
@@ -974,7 +980,6 @@ void PWM_Duty_Freq_Dual_Channel(void)
 					TIM1->CCR1 = PWM_Duty;
 
 					MAX_DUTY_Calculate = TIM1->ARR; // 跟新最大 DUTY
-
 				}
 				else if (PWM_Channel == 2)
 				{
@@ -991,10 +996,20 @@ void PWM_Duty_Freq_Dual_Channel(void)
 					TIM1->CCR2 = PWM_Duty;
 
 					MAX_DUTY_Calculate = TIM1->ARR; // 跟新最大 DUTY
-
 				}
 			}
 		}
+	}
+	/*C sharp CMD 判別*/
+	else if (strncmp(_rx_buffer2->buffer, "Open PWM Channel", 17) == true)
+	{
+		mointer_Enable = True;
+		HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+	}
+	else if (strncmp(_rx_buffer2->buffer, "Close PWM Channel", 18) == true)
+	{
+		mointer_Enable = False;
+		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
 	}
 
 	// 重製 buffer & Head & tail,包括失敗以及非法字串時
@@ -1002,4 +1017,15 @@ void PWM_Duty_Freq_Dual_Channel(void)
 	rx_buffer2.tail = 0;
 	memset(output_Buff, '\0', Uart_Buffer);
 	memset(_rx_buffer2->buffer, '\0', UART_BUFFER_SIZE);
+}
+
+/**
+ * @brief
+ * 顯示當前PWM資訊 duty(Ton時間) Freq(頻率)
+ */
+void Display_message_on_gui(void)
+{
+	char buffer[Uart_Buffer];
+	sprintf(buffer, "Duty is %0.4f,Freq is %d", mointer_Duty, mointer_Freq);
+	Uart_sendstring(buffer, pc_uart);
 }

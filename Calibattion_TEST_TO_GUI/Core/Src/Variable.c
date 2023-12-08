@@ -21,6 +21,10 @@ uint32_t Data_OCP_Addr;
 uint32_t Data_OVP_Addr;
 uint16_t SPWM_OUT;
 uint16_t PWM_Channel;
+uint8_t mointer_Enable;
+/*GUI display*/
+uint16_t mointer_Freq;
+float mointer_Duty;
 /*
  * 初始化變數變量
  * 請區分 所有結構體 為一組 以利於分辨
@@ -38,5 +42,4 @@ void Initail_Variable(void)
     /*Flash 測試變數使用區*/
 
     /*Flash 宣告變數區*/
-
 }

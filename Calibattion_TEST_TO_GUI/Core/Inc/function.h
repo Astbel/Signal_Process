@@ -26,4 +26,9 @@ extern void Black_Box_Write_Message_Status(void);
 extern void PWM_Duty_Freq_Change(void);
 extern void SPWM_Method(void);
 extern void PWM_Duty_Freq_Dual_Channel(void);
+extern void Display_message_on_gui(void);
+extern void initail_PWM_info(void);
+
+/**/
+
 #endif

@@ -15,7 +15,9 @@ typedef void (*CommandHandler)(void);
 // 測試函數 變數宣告
 extern uint16_t PWM_Channel;
 // 正式使用函數 變數宣告
-
+extern uint16_t mointer_Freq;
+extern float mointer_Duty;
+extern uint8_t mointer_Enable;
 /********************STRUCT***************************/
 struct PFC_VARIABLES
 {
@@ -26,7 +28,6 @@ struct Allert_Portect
     uint8_t OVP;
     uint8_t OCP;
     uint8_t OTP;
-
 };
 // Flash 結構體
 struct Flash_Dynamic
@@ -71,6 +72,5 @@ extern uint32_t ARR_LAST_TIME_SAVE;
 /*SPWM output*/
 extern uint16_t SPWM_OUT;
 /*********************Slope method**********************/
-
 
 #endif
