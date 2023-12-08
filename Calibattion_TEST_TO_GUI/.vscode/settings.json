@@ -5,6 +5,8 @@
         "main.h": "c",
         "function.h": "c",
         "variable.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "stm32f4xx_hal_dac.h": "c",
+        "stm32f4xx_hal.h": "c"
     }
 }

@@ -28,7 +28,8 @@ extern void SPWM_Method(void);
 extern void PWM_Duty_Freq_Dual_Channel(void);
 extern void Display_message_on_gui(void);
 extern void initail_PWM_info(void);
-
+/*Tri 三角波測試*/
+extern void DAC_Tri_Wave(void);
 /**/
 
 #endif
