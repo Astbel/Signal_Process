@@ -7,6 +7,8 @@
         "variable.h": "c",
         "string.h": "c",
         "stm32f4xx_hal_dac.h": "c",
-        "stm32f4xx_hal.h": "c"
+        "stm32f4xx_hal.h": "c",
+        "math.h": "c",
+        "flash_sector_f4.h": "c"
     }
 }

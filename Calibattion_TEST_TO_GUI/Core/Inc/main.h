@@ -36,7 +36,7 @@ extern "C" {
 #include "string.h"
 #include "stdlib.h"
 #include "FLASH_SECTOR_F4.h"
-
+#include "math.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -44,6 +44,7 @@ extern "C" {
   extern UART_HandleTypeDef huart2;
   extern UART_HandleTypeDef huart3;
   extern TIM_HandleTypeDef htim10;
+  extern TIM_HandleTypeDef htim2;
   extern TIM_HandleTypeDef htim1;
   extern ADC_HandleTypeDef hadc1;
   extern FLASH_EraseInitTypeDef flashstruct;
@@ -162,6 +163,9 @@ void Error_Handler(void);
 /*SineWave OffSET for negative side*/
 #define SINE_PWM_OFFSET (1000)
 
+/*SineWave*/
+#define PI 3.1415926
+#define Sine_Resltion (100)
   /*條件編譯DEBUG區*/
 
   // #define DEBUG_MODE_FLASH 1

@@ -30,6 +30,7 @@ extern void Display_message_on_gui(void);
 extern void initail_PWM_info(void);
 /*Tri 三角波測試*/
 extern void DAC_Tri_Wave(void);
+extern void get_sineval(void);
 /**/
 
 #endif

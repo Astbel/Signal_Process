@@ -8,9 +8,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         // ADC Scan
         //  Multi_ADC_Sample();
         HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-// C# LOG獲得命令
-// Get_Command_From_C_shrap();
-        // DAC_Tri_Wave();
+        // C# LOG獲得命令
+        DAC_Tri_Wave();
+        // Get_Command_From_C_shrap();
+        dac_flag = True;
 // PWM_Duty_Freq_Change();
 #ifdef ISR_DISPLAY
         PWM_Duty_Freq_Dual_Channel();
@@ -51,4 +52,13 @@ void DAC_Tri_Wave(void)
     }
 
     HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_value);
+    // dac_flag = False;
+}
+
+void get_sineval(void)
+{
+    for (int i = 0; i < 100; i++)
+    {
+        sine_val[i] = ((sin(i * 2 * PI / 100) + 1) * (4096 / 2));
+    }
 }

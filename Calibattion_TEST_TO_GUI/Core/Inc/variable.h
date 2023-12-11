@@ -14,10 +14,12 @@ typedef void (*CommandHandler)(void);
 /***********************Flash**********************/
 // 測試函數 變數宣告
 extern uint16_t PWM_Channel;
+extern uint32_t sine_val[100];
 // 正式使用函數 變數宣告
 extern uint16_t mointer_Freq;
 extern float mointer_Duty;
 extern uint8_t mointer_Enable;
+extern uint8_t dac_flag;
 /********************STRUCT***************************/
 struct PFC_VARIABLES
 {
