@@ -94,20 +94,20 @@ static int sine_cnt;
 static int inverse_sine_cnt;
 static int phase_state;
 /*Sine Table*/
-const uint16_t sine_table[129] = {
-    0, 12, 24, 36, 49, 61, 73, 85, 98, 110,
-    122, 134, 146, 158, 170, 183, 195, 207, 219, 231,
-    242, 254, 266, 278, 290, 302, 313, 325, 336, 348,
-    359, 371, 382, 393, 405, 416, 427, 438, 449, 460,
-    471, 482, 492, 503, 514, 524, 534, 545, 555, 565,
-    575, 585, 595, 605, 615, 624, 634, 643, 653, 662,
-    671, 680, 689, 698, 707, 715, 724, 732, 740, 749,
-    757, 765, 773, 780, 788, 795, 803, 810, 817, 824,
-    831, 838, 844, 851, 857, 863, 870, 876, 881, 887,
-    893, 898, 903, 909, 914, 919, 923, 928, 932, 937,
-    941, 945, 949, 953, 956, 960, 963, 966, 970, 972,
-    975, 978, 980, 983, 985, 987, 989, 990, 992, 993,
-    995, 996, 997, 998, 998, 999, 999, 999, 1000};
+// const uint16_t sine_table[129] = {
+//     0, 12, 24, 36, 49, 61, 73, 85, 98, 110,
+//     122, 134, 146, 158, 170, 183, 195, 207, 219, 231,
+//     242, 254, 266, 278, 290, 302, 313, 325, 336, 348,
+//     359, 371, 382, 393, 405, 416, 427, 438, 449, 460,
+//     471, 482, 492, 503, 514, 524, 534, 545, 555, 565,
+//     575, 585, 595, 605, 615, 624, 634, 643, 653, 662,
+//     671, 680, 689, 698, 707, 715, 724, 732, 740, 749,
+//     757, 765, 773, 780, 788, 795, 803, 810, 817, 824,
+//     831, 838, 844, 851, 857, 863, 870, 876, 881, 887,
+//     893, 898, 903, 909, 914, 919, 923, 928, 932, 937,
+//     941, 945, 949, 953, 956, 960, 963, 966, 970, 972,
+//     975, 978, 980, 983, 985, 987, 989, 990, 992, 993,
+//     995, 996, 997, 998, 998, 999, 999, 999, 1000};
 // const uint16_t sine_table[89] =
 //     {
 //         0, 18, 34, 52, 70, 87, 105, 122, 140, 156, 174, 191, 208, 225, 242,
@@ -181,20 +181,21 @@ int main(void)
 #endif
   /* Start ISR */
   HAL_TIM_Base_Start_IT(&htim10);
+  /*DAC 跟新事件*/
   HAL_TIM_Base_Start_IT(&htim2);
   /*PWM POEN*/
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-
-  get_sineval();
-
-  HAL_DAC_Start_DMA(&hdac,DAC_CHANNEL_1,sine_val, Sine_Resltion, DAC_ALIGN_12B_R);
+  #ifdef TestDac  
+  // get_sineval();
+   DAC_Tri_Wave();
+  // HAL_DAC_Start_DMA(&hdac,DAC_CHANNEL_1,sine_table, Sine_Resltion, DAC_ALIGN_12B_R);
+  HAL_DAC_Start_DMA(&hdac,DAC_CHANNEL_1,sawtooth_table, Tri_Resltion, DAC_ALIGN_12B_R);
+  #endif
   // HAL_DAC_Start(&hdac,DAC_CHANNEL_1);
   while (1)
   {
-    #ifdef TestDac  
-    DAC_Tri_Wave();
-  #endif
+   
     // 測試UART接收回傳  Receive 和 Transmint正常
 #ifdef DEBUG_MODE_UART
     if (IsDataAvailable(pc_uart))
@@ -210,58 +211,58 @@ int main(void)
   /* USER CODE END 3 */
 }
 
-void SPWM_Method(void)
-{
-  // Phase1
-  if (phase_state == 1)
-  {
-    if (sine_cnt == 127)
-      phase_state = 2;
+// void SPWM_Method(void)
+// {
+//   // Phase1
+//   if (phase_state == 1)
+//   {
+//     if (sine_cnt == 127)
+//       phase_state = 2;
 
-    else
-      sine_cnt++;
+//     else
+//       sine_cnt++;
 
-    // SPWM_OUT = SINE_PWM_OFFSET + sine_table[sine_cnt];
-    SPWM_OUT = sine_table[sine_cnt];
-  }
-  // Phase2
-  else if (phase_state == 2)
-  {
-    if (sine_cnt == 0)
-      phase_state = 3;
+//     // SPWM_OUT = SINE_PWM_OFFSET + sine_table[sine_cnt];
+//     SPWM_OUT = sine_table[sine_cnt];
+//   }
+//   // Phase2
+//   else if (phase_state == 2)
+//   {
+//     if (sine_cnt == 0)
+//       phase_state = 3;
 
-    else
-      sine_cnt--;
+//     else
+//       sine_cnt--;
 
-    // SPWM_OUT = SINE_PWM_OFFSET + sine_table[sine_cnt];
-    SPWM_OUT = sine_table[sine_cnt];
-  }
-  // Phase3
-  else if (phase_state == 3)
-  {
+//     // SPWM_OUT = SINE_PWM_OFFSET + sine_table[sine_cnt];
+//     SPWM_OUT = sine_table[sine_cnt];
+//   }
+//   // Phase3
+//   else if (phase_state == 3)
+//   {
 
-    if (sine_cnt == 127)
-      phase_state = 4;
-    else
-      sine_cnt++;
+//     if (sine_cnt == 127)
+//       phase_state = 4;
+//     else
+//       sine_cnt++;
 
-    SPWM_OUT = SINE_PWM_OFFSET - sine_table[sine_cnt];
-  }
-  // Phase4
-  else if (phase_state == 4)
-  {
+//     SPWM_OUT = SINE_PWM_OFFSET - sine_table[sine_cnt];
+//   }
+//   // Phase4
+//   else if (phase_state == 4)
+//   {
 
-    if (sine_cnt == 0)
-      phase_state = 1;
-    else
-      sine_cnt--;
+//     if (sine_cnt == 0)
+//       phase_state = 1;
+//     else
+//       sine_cnt--;
 
-    SPWM_OUT = SINE_PWM_OFFSET - sine_table[sine_cnt];
-  }
-  // SPWM_OUT = SPWM_OUT >> 10;
+//     SPWM_OUT = SINE_PWM_OFFSET - sine_table[sine_cnt];
+//   }
+//   // SPWM_OUT = SPWM_OUT >> 10;
 
-  TIM1->CCR1 = SPWM_OUT;
-}
+//   TIM1->CCR1 = SPWM_OUT;
+// }
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -501,9 +502,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
+  htim2.Init.Prescaler = 300;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 18000-1;
+  htim2.Init.Period = 1000-1;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)

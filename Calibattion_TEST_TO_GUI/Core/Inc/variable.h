@@ -14,7 +14,8 @@ typedef void (*CommandHandler)(void);
 /***********************Flash**********************/
 // 測試函數 變數宣告
 extern uint16_t PWM_Channel;
-extern uint32_t sine_val[100];
+extern uint32_t sine_table[100];
+extern uint32_t sawtooth_table[100];
 // 正式使用函數 變數宣告
 extern uint16_t mointer_Freq;
 extern float mointer_Duty;

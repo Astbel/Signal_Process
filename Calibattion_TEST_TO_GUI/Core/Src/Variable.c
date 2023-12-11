@@ -26,7 +26,8 @@ uint8_t mointer_Enable;
 uint16_t mointer_Freq;
 float mointer_Duty;
 /*Sine Wave*/
-uint32_t sine_val[Sine_Resltion];
+uint32_t sine_table[Sine_Resltion];
+uint32_t sawtooth_table[Tri_Resltion];
 /*
  * 初始化變數變量
  * 請區分 所有結構體 為一組 以利於分辨

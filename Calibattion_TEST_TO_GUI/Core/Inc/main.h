@@ -166,13 +166,16 @@ void Error_Handler(void);
 /*SineWave*/
 #define PI 3.1415926
 #define Sine_Resltion (100)
+#define Tri_Resltion (100)
+/*DAC 12bit limit 標腰化*/
+#define DAC_Resltion (0xFFF)
   /*條件編譯DEBUG區*/
 
   // #define DEBUG_MODE_FLASH 1
   //  #define DEBUG_MODE_UART  1
   // #define DEBUG_MODE_UART_ADC_Message 1
   //  #define ISR_DISPLAY 1
-    // #define TestDac 1
+    #define TestDac 1
 
 #ifdef __cplusplus
 }

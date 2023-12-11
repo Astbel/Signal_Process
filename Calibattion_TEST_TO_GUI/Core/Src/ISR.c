@@ -9,9 +9,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         //  Multi_ADC_Sample();
         HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
         // C# LOG獲得命令
-        DAC_Tri_Wave();
+       
         // Get_Command_From_C_shrap();
-        dac_flag = True;
+        
 // PWM_Duty_Freq_Change();
 #ifdef ISR_DISPLAY
         PWM_Duty_Freq_Dual_Channel();
@@ -32,10 +32,12 @@ void initail_PWM_info(void)
 {
     /*計算初始化頻率*/
     uint32_t initail_Freq = (uint32_t)((SystemCoreClock) / ((TIM1->PSC + 1) * (TIM1->ARR)));
-    mointer_Freq = initail_Freq / 1000;
+    mointer_Freq = initail_Freq / Freq_Gain;
     /*計算初始化DUTY*/
     mointer_Duty = (float)TIM1->CCR1 / TIM1->ARR;
 }
+
+/*Table 在initail 就建好*/
 
 /**
  * @brief
@@ -43,22 +45,18 @@ void initail_PWM_info(void)
  */
 void DAC_Tri_Wave(void)
 {
-    static uint32_t dac_value = 0;
-    dac_value += 100; // 調整三角波的增量
-
-    if (dac_value >= 4095) // 調整三角波的最大值
+    for (int i = 0; i < Tri_Resltion; i++)
     {
-        dac_value = 0;
+        sawtooth_table[i] = (uint16_t)(((i * 4096) / Tri_Resltion) & 0xFFF);
     }
 
-    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_value);
-    // dac_flag = False;
 }
 
+/*sin(wt+Amp)其中Amp 是大小 */
 void get_sineval(void)
 {
     for (int i = 0; i < 100; i++)
     {
-        sine_val[i] = ((sin(i * 2 * PI / 100) + 1) * (4096 / 2));
+        sine_table[i] = ((sin(i * 2 * PI / 100) + 0) * (4096 / 2));
     }
 }
