@@ -612,6 +612,33 @@ void Search_String(char s[], char out[], uint16_t p, uint16_t l)
 	}
 }
 
+/**
+ * @brief Search_String_Element 搜索字串元素
+ *
+ * @param input  原始buffer
+ * @param search_str 要搜索的字串
+ */
+int16_t Search_String_Element(const char *input, const char *search_str)
+{
+	int16_t len = -1;								 /* 初始化為 -1 表示未找到目標字串 */
+	size_t buffer_len = strlen(_rx_buffer2->buffer); /* buffer總長度 */
+
+	const char *target = strstr(input, search_str); /* 目標字 */
+	
+	if (target != NULL)
+	{
+		for (size_t cnt = 0; cnt < buffer_len; cnt++)
+		{
+			if (_rx_buffer2->buffer[cnt] == *target)
+			{
+				len = cnt ;
+				break;
+			}
+		}
+	}
+	return len;
+}
+
 // 命令处理函数
 void Get5VMinCommand(void)
 {
@@ -1028,4 +1055,49 @@ void Display_message_on_gui(void)
 	char buffer[Uart_Buffer];
 	sprintf(buffer, "Duty is %0.4f,Freq is %d", mointer_Duty, mointer_Freq);
 	Uart_sendstring(buffer, pc_uart);
+}
+
+/**
+ * @brief
+ * 判別字串來觸發event
+ */
+void WaveFrom_Event(void)
+{
+
+	char wave_Buff[5];
+	if (strncmp(_rx_buffer2->buffer, "SineWave", strlen("SineWave")) == true ||
+		strncmp(_rx_buffer2->buffer, "TriWave", strlen("TriWave")) == true)
+	{
+		// 如果字串匹配，執行這裡的程式碼,扣除當前判別字串
+		// 判別是Sine 還是Tri 共通點是Wave
+		/*
+		 * SineWave
+		 * TriWave
+		 * 這裡檢測W的位置所在長度
+		 */
+
+		int16_t wave_name_size;
+		wave_name_size = Search_String_Element(rx_buffer2.buffer, "W");
+		/*沒找到目標要處理*/
+
+#ifdef Debug_Searcg_Element_target
+		char buffer[Uart_Buffer];
+		sprintf(buffer, "w location is %d\n", wave_name_size);
+		Uart_sendstring(buffer, pc_uart);
+#endif
+
+		/*計算buffer內的字串大小*/
+		// size_t len = strlen(_rx_buffer2->buffer);
+		// size_t buffer_size = sizeof(_rx_buffer2->buffer);
+		/*移除判斷後字串*/
+		// if (buffer_size > wave_name_size)
+			// memmove(_rx_buffer2->buffer, _rx_buffer2->buffer + wave_name_size, len - wave_name_size + 1); // +1 包含 null 終止符號
+																										  /*移除後判別是Vpp 還是 Freq事件*/
+	}
+
+	// 重製 buffer & Head & tail,包括失敗以及非法字串時
+	rx_buffer2.head = 0;
+	rx_buffer2.tail = 0;
+	memset(wave_Buff, '\0', 5);
+	memset(_rx_buffer2->buffer, '\0', UART_BUFFER_SIZE);
 }

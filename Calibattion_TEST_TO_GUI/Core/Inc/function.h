@@ -32,5 +32,6 @@ extern void initail_PWM_info(void);
 extern void DAC_Tri_Wave(void);
 extern void get_sineval(void);
 /**/
+extern void WaveFrom_Event(void);
 
 #endif

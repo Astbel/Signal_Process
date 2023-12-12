@@ -1,6 +1,7 @@
 #include "main.h"
 struct PFC_VARIABLES PFC_Variables;
 struct Allert_Portect Dyanmic_Portect;
+
 // 申明變數
 uint32_t Protect_12V, Protect_5V;
 /*控制PWM 變數*/

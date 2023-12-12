@@ -176,6 +176,7 @@ void Error_Handler(void);
   // #define DEBUG_MODE_UART_ADC_Message 1
   //  #define ISR_DISPLAY 1
     #define TestDac 1
+    #define Debug_Searcg_Element_target 1 
 
 #ifdef __cplusplus
 }

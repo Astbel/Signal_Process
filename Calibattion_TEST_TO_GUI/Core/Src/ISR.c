@@ -11,7 +11,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         // C# LOG獲得命令
        
         // Get_Command_From_C_shrap();
-        
+        WaveFrom_Event();
 // PWM_Duty_Freq_Change();
 #ifdef ISR_DISPLAY
         PWM_Duty_Freq_Dual_Channel();
