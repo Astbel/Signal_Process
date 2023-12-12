@@ -8,7 +8,8 @@ extern struct PFC_VARIABLES PFC_Variables;
 extern struct Allert_Portect Dyanmic_Portect;
 extern struct Flash_Dynamic Flash_Memory;
 /*********************WaveFrom*****************************/
-
+extern uint16_t wave_Freq;
+extern uint16_t wave_Vpp;
 /**********************C# command 指標函數************************/
 typedef void (*CommandHandler)(void);
 /***********************Flash**********************/

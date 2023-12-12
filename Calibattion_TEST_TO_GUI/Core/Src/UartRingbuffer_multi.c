@@ -613,7 +613,7 @@ void Search_String(char s[], char out[], uint16_t p, uint16_t l)
 }
 
 /**
- * @brief Search_String_Element 搜索字串元素
+ * @brief Search_String_Element 搜索字串元素位置(包含0)目標字不重複為前提
  *
  * @param input  原始buffer
  * @param search_str 要搜索的字串
@@ -624,14 +624,14 @@ int16_t Search_String_Element(const char *input, const char *search_str)
 	size_t buffer_len = strlen(_rx_buffer2->buffer); /* buffer總長度 */
 
 	const char *target = strstr(input, search_str); /* 目標字 */
-	
+
 	if (target != NULL)
 	{
 		for (size_t cnt = 0; cnt < buffer_len; cnt++)
 		{
 			if (_rx_buffer2->buffer[cnt] == *target)
 			{
-				len = cnt ;
+				len = cnt;
 				break;
 			}
 		}
@@ -1057,47 +1057,76 @@ void Display_message_on_gui(void)
 	Uart_sendstring(buffer, pc_uart);
 }
 
+
 /**
- * @brief
- * 判別字串來觸發event
+ * @brief 移除Freq 和Vpp
+ * 
+ * @param target    目標Buffer
+ * @param start_pos 起點刪除
+ * @param wave_value 取出字串紀錄
  */
+void RemoveSubstringAndProcess(const char* target, size_t start_pos, int* wave_value)
+{
+    size_t len = strlen(_rx_buffer2->buffer);
+
+    if (len > start_pos)
+    {
+        memmove(_rx_buffer2->buffer, _rx_buffer2->buffer + start_pos, len - start_pos + 1);
+
+        // 取出 User 字串
+        *wave_value = atoi(_rx_buffer2->buffer);
+
+        // 測試打印數值
+        // Uart_sendstring(_rx_buffer2->buffer, pc_uart);
+    }
+}
+
 void WaveFrom_Event(void)
 {
-
-	char wave_Buff[5];
-	if (strncmp(_rx_buffer2->buffer, "SineWave", strlen("SineWave")) == true ||
-		strncmp(_rx_buffer2->buffer, "TriWave", strlen("TriWave")) == true)
-	{
-		// 如果字串匹配，執行這裡的程式碼,扣除當前判別字串
-		// 判別是Sine 還是Tri 共通點是Wave
-		/*
-		 * SineWave
-		 * TriWave
-		 * 這裡檢測W的位置所在長度
-		 */
-
-		int16_t wave_name_size;
-		wave_name_size = Search_String_Element(rx_buffer2.buffer, "W");
-		/*沒找到目標要處理*/
+    char output_Buff[Uart_Buffer];
+    char wave_Freq_Buff[10];
+    int16_t wave_name_size = Search_String_Element(rx_buffer2.buffer, Target);
 
 #ifdef Debug_Searcg_Element_target
-		char buffer[Uart_Buffer];
-		sprintf(buffer, "w location is %d\n", wave_name_size);
-		Uart_sendstring(buffer, pc_uart);
+    char buffer[Uart_Buffer];
+    sprintf(buffer, "w location is %d\n", wave_name_size);
+    Uart_sendstring(buffer, pc_uart);
 #endif
 
-		/*計算buffer內的字串大小*/
-		// size_t len = strlen(_rx_buffer2->buffer);
-		// size_t buffer_size = sizeof(_rx_buffer2->buffer);
-		/*移除判斷後字串*/
-		// if (buffer_size > wave_name_size)
-			// memmove(_rx_buffer2->buffer, _rx_buffer2->buffer + wave_name_size, len - wave_name_size + 1); // +1 包含 null 終止符號
-																										  /*移除後判別是Vpp 還是 Freq事件*/
-	}
+    if (wave_name_size >= 0)
+    {
+        // 找到目標
+        size_t len = strlen(_rx_buffer2->buffer);
 
-	// 重製 buffer & Head & tail,包括失敗以及非法字串時
-	rx_buffer2.head = 0;
-	rx_buffer2.tail = 0;
-	memset(wave_Buff, '\0', 5);
-	memset(_rx_buffer2->buffer, '\0', UART_BUFFER_SIZE);
+        // 移除判斷後字串，Wave_len是共通字串"Wave"的長度
+        if (len > wave_name_size + Wave_len)
+            memmove(_rx_buffer2->buffer, _rx_buffer2->buffer + wave_name_size + Wave_len, len - wave_name_size - Wave_len + 1);
+
+#ifdef Debug_Searcg_Element_target
+        Uart_sendstring(_rx_buffer2->buffer, pc_uart);
+#endif
+
+        // 判斷是 "Freq" 還是 "Vpp" 事件
+        if (strstr(_rx_buffer2->buffer, "Freq") != NULL || strstr(_rx_buffer2->buffer, "Vpp") != NULL)
+        {
+            if (strstr(_rx_buffer2->buffer, "Freq") != NULL)
+            {
+                // 移除 "Freq" 字串部分只留下數字部分
+                RemoveSubstringAndProcess("Freq", strlen("Freq"), &wave_Freq);
+            }
+            else
+            {
+                // Vpp 事件
+                // 移除 "Vpp" 字串後的數字
+                RemoveSubstringAndProcess("Vpp", strlen("Vpp"), &wave_Vpp);
+            }
+        }
+    }
+
+    // 重製 buffer & Head & tail，包括失敗以及非法字串時
+    rx_buffer2.head = 0;
+    rx_buffer2.tail = 0;
+    memset(wave_Freq_Buff, '\0', sizeof(wave_Freq_Buff));
+    memset(output_Buff, '\0', sizeof(output_Buff));
+    memset(_rx_buffer2->buffer, '\0', UART_BUFFER_SIZE);
 }
