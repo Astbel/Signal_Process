@@ -1057,76 +1057,129 @@ void Display_message_on_gui(void)
 	Uart_sendstring(buffer, pc_uart);
 }
 
-
 /**
  * @brief 移除Freq 和Vpp
- * 
+ *
  * @param target    目標Buffer
  * @param start_pos 起點刪除
  * @param wave_value 取出字串紀錄
  */
-void RemoveSubstringAndProcess(const char* target, size_t start_pos, int* wave_value)
+void RemoveSubstringAndProcess(const char *target, size_t start_pos, uint16_t *wave_value)
 {
-    size_t len = strlen(_rx_buffer2->buffer);
+	size_t len = strlen(_rx_buffer2->buffer);
 
-    if (len > start_pos)
-    {
-        memmove(_rx_buffer2->buffer, _rx_buffer2->buffer + start_pos, len - start_pos + 1);
+	if (len > start_pos)
+	{
+		memmove(_rx_buffer2->buffer, _rx_buffer2->buffer + start_pos, len - start_pos + 1);
 
-        // 取出 User 字串
-        *wave_value = atoi(_rx_buffer2->buffer);
+		// 取出 User 字串
+		*wave_value = atoi(_rx_buffer2->buffer);
 
-        // 測試打印數值
-        // Uart_sendstring(_rx_buffer2->buffer, pc_uart);
-    }
+		// 測試打印數值
+		// Uart_sendstring(_rx_buffer2->buffer, pc_uart);
+	}
 }
 
 void WaveFrom_Event(void)
 {
-    char output_Buff[Uart_Buffer];
-    char wave_Freq_Buff[10];
-    int16_t wave_name_size = Search_String_Element(rx_buffer2.buffer, Target);
+	char output_Buff[Uart_Buffer];
+	char wave_Freq_Buff[10];
+	/*字串目標搜索*/
+	int16_t wave_name_size = Search_String_Element(rx_buffer2.buffer, Target);
+	/*判別 波型種類*/
+	if (wave_name_size == 3)
+		wave_select = TriWave;
+	else if (wave_name_size == 4)
+		wave_select = SineWave;
+	else
+		wave_select = NULL;
 
 #ifdef Debug_Searcg_Element_target
-    char buffer[Uart_Buffer];
-    sprintf(buffer, "w location is %d\n", wave_name_size);
-    Uart_sendstring(buffer, pc_uart);
+	char buffer[Uart_Buffer];
+	sprintf(buffer, "w location is %d\n", wave_name_size);
+	Uart_sendstring(buffer, pc_uart);
 #endif
+	/*Search_String_Element在沒找到元素時會回傳-1*/
+	if (wave_name_size >= 0)
+	{
+		// 找到目標
+		size_t len = strlen(_rx_buffer2->buffer);
 
-    if (wave_name_size >= 0)
-    {
-        // 找到目標
-        size_t len = strlen(_rx_buffer2->buffer);
-
-        // 移除判斷後字串，Wave_len是共通字串"Wave"的長度
-        if (len > wave_name_size + Wave_len)
-            memmove(_rx_buffer2->buffer, _rx_buffer2->buffer + wave_name_size + Wave_len, len - wave_name_size - Wave_len + 1);
+		// 移除判斷後字串，Wave_len是共通字串"Wave"的長度
+		if (len > wave_name_size + Wave_len)
+			memmove(_rx_buffer2->buffer, _rx_buffer2->buffer + wave_name_size + Wave_len, len - wave_name_size - Wave_len + 1);
 
 #ifdef Debug_Searcg_Element_target
-        Uart_sendstring(_rx_buffer2->buffer, pc_uart);
+		Uart_sendstring(_rx_buffer2->buffer, pc_uart);
 #endif
 
-        // 判斷是 "Freq" 還是 "Vpp" 事件
-        if (strstr(_rx_buffer2->buffer, "Freq") != NULL || strstr(_rx_buffer2->buffer, "Vpp") != NULL)
-        {
-            if (strstr(_rx_buffer2->buffer, "Freq") != NULL)
-            {
-                // 移除 "Freq" 字串部分只留下數字部分
-                RemoveSubstringAndProcess("Freq", strlen("Freq"), &wave_Freq);
-            }
-            else
-            {
-                // Vpp 事件
-                // 移除 "Vpp" 字串後的數字
-                RemoveSubstringAndProcess("Vpp", strlen("Vpp"), &wave_Vpp);
-            }
-        }
-    }
+		// 判斷是 "Freq" 還是 "Vpp" 事件
+		if (strstr(_rx_buffer2->buffer, "Freq") != NULL || strstr(_rx_buffer2->buffer, "Vpp") != NULL)
+		{
+			if (strstr(_rx_buffer2->buffer, "Freq") != NULL)
+			{
+				// 移除 "Freq" 字串部分只留下數字部分
+				RemoveSubstringAndProcess("Freq", strlen("Freq"), &wave_Freq);
+			}
+			else
+			{
+				// Vpp 事件
+				// 移除 "Vpp" 字串後的數字
+				RemoveSubstringAndProcess("Vpp", strlen("Vpp"), &wave_Vpp);
+				/*判別sine & tri 呼叫跟新對應DAC table*/
+				DAC_Table_Create(wave_select, &wave_Vpp);
+			}
+		}
+	}
 
-    // 重製 buffer & Head & tail，包括失敗以及非法字串時
-    rx_buffer2.head = 0;
-    rx_buffer2.tail = 0;
-    memset(wave_Freq_Buff, '\0', sizeof(wave_Freq_Buff));
-    memset(output_Buff, '\0', sizeof(output_Buff));
-    memset(_rx_buffer2->buffer, '\0', UART_BUFFER_SIZE);
+	// 重製 buffer & Head & tail，包括失敗以及非法字串時
+	rx_buffer2.head = 0;
+	rx_buffer2.tail = 0;
+	memset(wave_Freq_Buff, '\0', sizeof(wave_Freq_Buff));
+	memset(output_Buff, '\0', sizeof(output_Buff));
+	memset(_rx_buffer2->buffer, '\0', UART_BUFFER_SIZE);
 }
+
+/*DAC Vpp Table 創建事件*/
+/**
+ * @brief
+ *5k4u1
+ * @param wave_name
+ * @param vpp_value
+ */
+void DAC_Table_Create(int wave_name, uint16_t *vpp_value)
+{
+	/*創建default指標*/
+	uint32_t *current_table = sawtooth_table;
+
+	/*截取User Vpp 紀錄*/
+	uint16_t offset = *vpp_value;
+	/*停止DMA 訪問表格*/
+	HAL_DAC_Stop_DMA(&hdac, DAC_CHANNEL_1);
+	/*判別Tri*/
+	if (wave_name == TriWave)
+	{
+		current_table = sawtooth_table;
+		for (int i = 0; i < Tri_Resltion; i++)
+		{
+			sawtooth_table[i] = (uint16_t)((((i + offset) * 4096) / Tri_Resltion) & 0xFFF);
+		}
+	}
+	/*Sine*/
+	else if (wave_name == SineWave)
+	{
+		current_table = sine_table;
+		for (int i = 0; i < 100; i++)
+		{
+			sine_table[i] = ((sin(i * 2 * PI / 100) + offset) * (4096 / 2));
+		}
+	}
+	/*DMA loading 指向對應表格*/
+	HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, current_table, Table_Size, DAC_ALIGN_12B_R);
+}
+
+
+
+
+
+

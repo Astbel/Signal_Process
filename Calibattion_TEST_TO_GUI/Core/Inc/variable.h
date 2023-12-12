@@ -10,6 +10,7 @@ extern struct Flash_Dynamic Flash_Memory;
 /*********************WaveFrom*****************************/
 extern uint16_t wave_Freq;
 extern uint16_t wave_Vpp;
+extern uint8_t wave_select;
 /**********************C# command 指標函數************************/
 typedef void (*CommandHandler)(void);
 /***********************Flash**********************/

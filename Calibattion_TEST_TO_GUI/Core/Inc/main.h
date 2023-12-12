@@ -168,14 +168,16 @@ extern "C"
 #define PI 3.1415926
 #define Sine_Resltion (100)
 #define Tri_Resltion (100)
+#define Table_Size (100)
 /*DAC 12bit limit 標腰化*/
 #define DAC_Resltion (0xFFF)
 
 /*Search char*/
 #define Target ("W")
 #define Wave_len (4) 
-#define SineWave (4)
-#define TriWave (3)
+#define TriWave (1)
+#define SineWave (2)
+
 
 
 

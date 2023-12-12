@@ -32,6 +32,7 @@ uint32_t sawtooth_table[Tri_Resltion];
 /*Wave 設定值*/
 uint16_t wave_Freq;
 uint16_t wave_Vpp;
+uint8_t wave_select;
 /*
  * 初始化變數變量
  * 請區分 所有結構體 為一組 以利於分辨

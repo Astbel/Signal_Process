@@ -33,6 +33,6 @@ extern void DAC_Tri_Wave(void);
 extern void get_sineval(void);
 /**/
 extern void WaveFrom_Event(void);
-extern void RemoveSubstringAndProcess(const char* target, size_t start_pos, int* wave_value);
-
+extern void RemoveSubstringAndProcess(const char* target, size_t start_pos, uint16_t* wave_value);
+extern void DAC_Table_Create(int wave_name, uint16_t *vpp_value);
 #endif
