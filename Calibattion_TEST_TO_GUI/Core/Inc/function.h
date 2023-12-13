@@ -35,4 +35,5 @@ extern void get_sineval(void);
 extern void WaveFrom_Event(void);
 extern void RemoveSubstringAndProcess(const char* target, size_t start_pos, uint16_t* wave_value);
 extern void DAC_Table_Create(int wave_name, uint16_t *vpp_value);
+extern void Wave_Freq_Update(int wave_name,uint16_t *wave_value);
 #endif

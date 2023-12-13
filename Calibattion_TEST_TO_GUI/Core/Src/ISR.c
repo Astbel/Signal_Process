@@ -57,6 +57,6 @@ void get_sineval(void)
 {
     for (int i = 0; i < 100; i++)
     {
-        sine_table[i] = ((sin(i * 2 * PI / 100) + 1) * (4096 / 2));
+        sine_table[i] = (((sin(i * 2 * PI / 100) + 1)) * (4096 / 2));
     }
 }

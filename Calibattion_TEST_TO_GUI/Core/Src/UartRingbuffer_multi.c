@@ -1120,6 +1120,7 @@ void WaveFrom_Event(void)
 			{
 				// 移除 "Freq" 字串部分只留下數字部分
 				RemoveSubstringAndProcess("Freq", strlen("Freq"), &wave_Freq);
+				Wave_Freq_Update(wave_select, &wave_Freq);
 			}
 			else
 			{
@@ -1155,31 +1156,70 @@ void DAC_Table_Create(int wave_name, uint16_t *vpp_value)
 	char buffer[Table_Size];
 	/*截取User Vpp 紀錄*/
 	uint16_t offset = *vpp_value;
+	/*Vpp的上下值*/
+	uint16_t Vpp_resaltion;
+	switch (offset)
+	{
+
+	case 3:
+		Vpp_resaltion = 4096;
+		break;
+
+	case 2:
+		Vpp_resaltion = 2048;
+		break;
+
+	case 1:
+		Vpp_resaltion = 1024;
+		break;
+
+	default:
+		Vpp_resaltion = 1024;
+		break;
+	}
+
 	/*停止DMA 訪問表格*/
 	HAL_DAC_Stop_DMA(&hdac, DAC_CHANNEL_1);
 	/*判別Tri*/
 	if (wave_name == TriWave)
 	{
 		current_table = sawtooth_table;
-		sprintf(buffer,"SawtoothWave");
+		sprintf(buffer, "SawtoothWave");
 		for (int i = 0; i < Tri_Resltion; i++)
 		{
-			sawtooth_table[i] = (uint16_t)((((i + offset) * 4096) / Tri_Resltion) & 0xFFF);
+			sawtooth_table[i] = (uint16_t)(((i * Vpp_resaltion) / Tri_Resltion) & 0xFFF);
 		}
 	}
 	/*Sine*/
 	else if (wave_name == SineWave)
 	{
 		current_table = sine_table;
-		sprintf(buffer,"SineWave");
+		sprintf(buffer, "SineWave");
 		for (int i = 0; i < 100; i++)
 		{
-			sine_table[i] = ((sin(i * 2 * PI / 100) + offset) * (4096 / 2));
+			sine_table[i] = ((sin(i * 2 * PI / 100) + offset) * (Vpp_resaltion / 2));
 		}
 	}
 	/*DMA loading 指向對應表格*/
 	HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, current_table, Table_Size, DAC_ALIGN_12B_R);
-	Uart_sendstring(buffer,pc_uart);
+	Uart_sendstring(buffer, pc_uart);
 }
 
+/**
+ * @brief
+ * @param wave_name  檢測user輸入對應的WaveName
+ * @param wave_value 根據user 輸入頻率Update頻率
+ */
+void Wave_Freq_Update(int wave_name, uint16_t *wave_value)
+{
+	/*檢測是否需要變換DMA的Table*/
+	// if (wave_name == SineWave)
+	// 	HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, sawtooth_table, Table_Size, DAC_ALIGN_12B_R);
 
+	// else if (wave_name == TriWave)
+	// 	HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, sine_table, Table_Size, DAC_ALIGN_12B_R);
+
+	uint16_t wave_update_freq = *wave_value;
+	uint32_t wave_Freq = wave_update_freq * 5000;
+	TIM2->ARR = (uint32_t)((SystemCoreClock) / ((TIM2->PSC + 1) * wave_Freq));
+}
