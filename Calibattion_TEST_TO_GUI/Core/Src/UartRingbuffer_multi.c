@@ -1151,7 +1151,8 @@ void DAC_Table_Create(int wave_name, uint16_t *vpp_value)
 {
 	/*創建default指標*/
 	uint32_t *current_table = sawtooth_table;
-
+	/*測試字串buffer*/
+	char buffer[Table_Size];
 	/*截取User Vpp 紀錄*/
 	uint16_t offset = *vpp_value;
 	/*停止DMA 訪問表格*/
@@ -1160,6 +1161,7 @@ void DAC_Table_Create(int wave_name, uint16_t *vpp_value)
 	if (wave_name == TriWave)
 	{
 		current_table = sawtooth_table;
+		sprintf(buffer,"SawtoothWave");
 		for (int i = 0; i < Tri_Resltion; i++)
 		{
 			sawtooth_table[i] = (uint16_t)((((i + offset) * 4096) / Tri_Resltion) & 0xFFF);
@@ -1169,6 +1171,7 @@ void DAC_Table_Create(int wave_name, uint16_t *vpp_value)
 	else if (wave_name == SineWave)
 	{
 		current_table = sine_table;
+		sprintf(buffer,"SineWave");
 		for (int i = 0; i < 100; i++)
 		{
 			sine_table[i] = ((sin(i * 2 * PI / 100) + offset) * (4096 / 2));
@@ -1176,10 +1179,7 @@ void DAC_Table_Create(int wave_name, uint16_t *vpp_value)
 	}
 	/*DMA loading 指向對應表格*/
 	HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, current_table, Table_Size, DAC_ALIGN_12B_R);
+	Uart_sendstring(buffer,pc_uart);
 }
-
-
-
-
 
 
