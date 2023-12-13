@@ -156,9 +156,6 @@ int main(void)
   MX_TIM2_Init();
   Ringbuf_init();
   Initail_Variable();
-  sine_cnt = 0;
-  inverse_sine_cnt = 89;
-  phase_state = 1;
   mointer_Enable =True;
   MAX_DUTY_Calculate = MAX_DUTY ;
   /*Flash 測試功能區*/
@@ -182,15 +179,15 @@ int main(void)
   /* Start ISR */
   HAL_TIM_Base_Start_IT(&htim10);
   /*DAC 跟新事件*/
-  HAL_TIM_Base_Start_IT(&htim2);
+  HAL_TIM_Base_Start(&htim2);
   /*PWM POEN*/
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
   #ifdef TestDac  
-  // get_sineval();
-   DAC_Tri_Wave();
-  // HAL_DAC_Start_DMA(&hdac,DAC_CHANNEL_1,sine_table, Sine_Resltion, DAC_ALIGN_12B_R);
-  HAL_DAC_Start_DMA(&hdac,DAC_CHANNEL_1,sawtooth_table, Tri_Resltion, DAC_ALIGN_12B_R);
+  get_sineval();
+  //  DAC_Tri_Wave();
+  HAL_DAC_Start_DMA(&hdac,DAC_CHANNEL_1,sine_table, Sine_Resltion, DAC_ALIGN_12B_R);
+  // HAL_DAC_Start_DMA(&hdac,DAC_CHANNEL_1,sawtooth_table, Tri_Resltion, DAC_ALIGN_12B_R);
   #endif
   // HAL_DAC_Start(&hdac,DAC_CHANNEL_1);
   while (1)
@@ -502,11 +499,11 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 300;
+  htim2.Init.Prescaler = 9-1;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 1000-1;
+  htim2.Init.Period = 100-1;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();

@@ -27,177 +27,11 @@ Project File Date:  12/11/2023
 <h2>Output:</h2>
 *** Using Compiler 'V6.19', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'Calibattion_TEST_TO_GUI'
-../Core/Src/UartRingbuffer_multi.c(624): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-        size_t buffer_len = strlen(_rx_buffer2->buffer); /* buffer總長度 */
-                                   ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(335): note: passing argument to parameter here
-extern _ARMABI size_t strlen(const char * /*s*/) __attribute__((__nonnull__(1)));
-                                               ^
-../Core/Src/UartRingbuffer_multi.c(854): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-        if (strncmp(_rx_buffer2->buffer, "CH", 2) == true)
-                    ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(859): warning: passing 'unsigned char[128]' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                Search_String(rx_buffer2.buffer, output_Buff, search_string_start, channel);
-                              ^~~~~~~~~~~~~~~~~
-../Core/Src/UartRingbuffer_multi.c(591): note: passing argument to parameter 's' here
-void Search_String(char s[], char out[], uint16_t p, uint16_t l)
-                        ^
-../Core/Src/UartRingbuffer_multi.c(865): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-        if (strncmp(_rx_buffer2->buffer, "Duty", 4) == true || strncmp(_rx_buffer2->buffer, "Freq", 4) == true)
-                    ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(865): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-        if (strncmp(_rx_buffer2->buffer, "Duty", 4) == true || strncmp(_rx_buffer2->buffer, "Freq", 4) == true)
-                                                                       ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(870): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                size_t cmdLength = strlen(_rx_buffer2->buffer);
-                                          ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(335): note: passing argument to parameter here
-extern _ARMABI size_t strlen(const char * /*s*/) __attribute__((__nonnull__(1)));
-                                               ^
-../Core/Src/UartRingbuffer_multi.c(882): warning: passing 'unsigned char[128]' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                Search_String(rx_buffer2.buffer, output_Buff, 4, digitPosition);
-                              ^~~~~~~~~~~~~~~~~
-../Core/Src/UartRingbuffer_multi.c(591): note: passing argument to parameter 's' here
-void Search_String(char s[], char out[], uint16_t p, uint16_t l)
-                        ^
-../Core/Src/UartRingbuffer_multi.c(884): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                if (strncmp(_rx_buffer2->buffer, "Duty", 4) == true)
-                            ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(894): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                else if (strncmp(_rx_buffer2->buffer, "Freq", 4) == true)
-                                 ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(931): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-        if (strncmp(_rx_buffer2->buffer, "CH", 2) == true)
-                    ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(937): warning: passing 'unsigned char[128]' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                Search_String(rx_buffer2.buffer, channel_Buff, search_string_start, channel);
-                              ^~~~~~~~~~~~~~~~~
-../Core/Src/UartRingbuffer_multi.c(591): note: passing argument to parameter 's' here
-void Search_String(char s[], char out[], uint16_t p, uint16_t l)
-                        ^
-../Core/Src/UartRingbuffer_multi.c(947): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                size_t len = strlen(_rx_buffer2->buffer);
-                                    ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(335): note: passing argument to parameter here
-extern _ARMABI size_t strlen(const char * /*s*/) __attribute__((__nonnull__(1)));
-                                               ^
-../Core/Src/UartRingbuffer_multi.c(955): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                if (strncmp(_rx_buffer2->buffer, "Duty", 4) == true || strncmp(_rx_buffer2->buffer, "Freq", 4) == true)
-                            ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(955): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                if (strncmp(_rx_buffer2->buffer, "Duty", 4) == true || strncmp(_rx_buffer2->buffer, "Freq", 4) == true)
-                                                                               ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(960): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                        size_t cmdLength = strlen(_rx_buffer2->buffer);
-                                                  ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(335): note: passing argument to parameter here
-extern _ARMABI size_t strlen(const char * /*s*/) __attribute__((__nonnull__(1)));
-                                               ^
-../Core/Src/UartRingbuffer_multi.c(968): warning: passing 'unsigned char[128]' to parameter of type 'char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                        Search_String(rx_buffer2.buffer, output_Buff, 4, digitPosition);
-                                      ^~~~~~~~~~~~~~~~~
-../Core/Src/UartRingbuffer_multi.c(591): note: passing argument to parameter 's' here
-void Search_String(char s[], char out[], uint16_t p, uint16_t l)
-                        ^
-../Core/Src/UartRingbuffer_multi.c(970): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                        if (strncmp(_rx_buffer2->buffer, "Duty", 4) == true)
-                                    ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(990): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                        else if (strncmp(_rx_buffer2->buffer, "Freq", 4) == true)
-                                         ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(1031): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-        else if (strncmp(_rx_buffer2->buffer, "Open PWM Channel", 17) == true)
-                         ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(1036): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-        else if (strncmp(_rx_buffer2->buffer, "Close PWM Channel", 18) == true)
-                         ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(132): note: passing argument to parameter here
-extern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
-                                              ^
-../Core/Src/UartRingbuffer_multi.c(943): warning: 'sprintf' will always overflow; destination buffer has size 10, but format string expands to at least 13 [-Wfortify-source]
-                sprintf(buffer, "Channel is %d", PWM_Channel);
-                ^
-../Core/Src/UartRingbuffer_multi.c(1069): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-        size_t len = strlen(_rx_buffer2->buffer);
-                            ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(335): note: passing argument to parameter here
-extern _ARMABI size_t strlen(const char * /*s*/) __attribute__((__nonnull__(1)));
-                                               ^
-../Core/Src/UartRingbuffer_multi.c(1076): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                *wave_value = atoi(_rx_buffer2->buffer);
-                                   ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdlib.h(164): note: passing argument to parameter here
-extern _ARMABI int atoi(const char * /*nptr*/) __attribute__((__nonnull__(1)));
-                                             ^
-../Core/Src/UartRingbuffer_multi.c(1088): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-        int16_t wave_name_size = Search_String_Element(rx_buffer2.buffer, Target);
-                                                       ^~~~~~~~~~~~~~~~~
-../Core/Src/UartRingbuffer_multi.c(621): note: passing argument to parameter 'input' here
-int16_t Search_String_Element(const char *input, const char *search_str)
-                                          ^
-../Core/Src/UartRingbuffer_multi.c(1106): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                size_t len = strlen(_rx_buffer2->buffer);
-                                    ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(335): note: passing argument to parameter here
-extern _ARMABI size_t strlen(const char * /*s*/) __attribute__((__nonnull__(1)));
-                                               ^
-../Core/Src/UartRingbuffer_multi.c(1117): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                if (strstr(_rx_buffer2->buffer, "Freq") != NULL || strstr(_rx_buffer2->buffer, "Vpp") != NULL)
-                           ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(270): note: passing argument to parameter here
-extern _ARMABI char *strstr(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
-                                               ^
-../Core/Src/UartRingbuffer_multi.c(1117): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                if (strstr(_rx_buffer2->buffer, "Freq") != NULL || strstr(_rx_buffer2->buffer, "Vpp") != NULL)
-                                                                          ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(270): note: passing argument to parameter here
-extern _ARMABI char *strstr(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
-                                               ^
-../Core/Src/UartRingbuffer_multi.c(1119): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                        if (strstr(_rx_buffer2->buffer, "Freq") != NULL)
-                                   ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(270): note: passing argument to parameter here
-extern _ARMABI char *strstr(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
-                                               ^
-28 warnings generated.
-compiling UartRingbuffer_multi.c...
+compiling main.c...
 linking...
-Program Size: Code=24868 RO-data=1268 RW-data=12 ZI-data=3596  
+Program Size: Code=25532 RO-data=1268 RW-data=12 ZI-data=3596  
 FromELF: creating hex file...
-"Calibattion_TEST_TO_GUI\Calibattion_TEST_TO_GUI.axf" - 0 Error(s), 28 Warning(s).
+"Calibattion_TEST_TO_GUI\Calibattion_TEST_TO_GUI.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -221,7 +55,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.6.0
       Include file:  CMSIS/Core/Include/tz_context.h
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>
