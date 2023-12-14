@@ -1079,7 +1079,56 @@ void RemoveSubstringAndProcess(const char *target, size_t start_pos, uint16_t *w
 		// Uart_sendstring(_rx_buffer2->buffer, pc_uart);
 	}
 }
+/**
+ * @brief 提取包含事件
+ *
+ * @param input 輸入buffer
+ * @param vpp   目標字串一
+ * @param freq  目標字串二
+ */
+void extractValues(const char *input, int *vpp, int *freq)
+{
+	// Uart_sendstring(input, pc_uart);
+	char output_Buff[Uart_Buffer];
+	const char *vppMarker = strstr(input, "Vpp");
+	const char *freqMarker = strstr(input, "Freq");
 
+	if (vppMarker != NULL && freqMarker != NULL)
+	{
+		// 移动到 "Vpp" 和 "Freq" 后的位置
+		vppMarker += strlen("Vpp");
+		freqMarker += strlen("Freq");
+
+		// 读取数字
+		*vpp = atoi(vppMarker);
+		*freq = atoi(freqMarker);
+	}
+	else
+	{
+		// 没有找到 "Vpp" 或 "Freq"
+		*vpp = -1; // 或者其他表示未找到的值
+		*freq = -1;
+	}
+	// sprintf(output_Buff, "Vpp is %d, Freq is %d", *vpp, *freq);
+	// Uart_sendstring(output_Buff, pc_uart);
+}
+
+void RemoveSubstringMulti(void)
+{
+	char output_Buff[Uart_Buffer];
+
+	/*sscanf取出Vpp 和 Freq 數值*/
+	static uint16_t wave_User_Vpp, wave_User_Freq;
+
+	extractValues(_rx_buffer2->buffer, &wave_User_Vpp, &wave_User_Freq);
+
+	// sprintf(output_Buff, "Vpp is %d, Freq is %d", wave_User_Vpp, wave_User_Freq);
+	// Uart_sendstring(output_Buff, pc_uart);
+
+	Wave_Vpp_Freq_Multi_Thread_Update(wave_select,&wave_User_Vpp,&wave_User_Freq);
+}
+
+/*ISR 事件*/
 void WaveFrom_Event(void)
 {
 	char output_Buff[Uart_Buffer];
@@ -1114,21 +1163,32 @@ void WaveFrom_Event(void)
 #endif
 
 		// 判斷是 "Freq" 還是 "Vpp" 事件
-		if (strstr(_rx_buffer2->buffer, "Freq") != NULL || strstr(_rx_buffer2->buffer, "Vpp") != NULL)
 		{
-			if (strstr(_rx_buffer2->buffer, "Freq") != NULL)
+			// 检查是否同时包含 "Freq" 和 "Vpp"
+			if (strstr(_rx_buffer2->buffer, "Freq") != NULL && strstr(_rx_buffer2->buffer, "Vpp") != NULL)
 			{
-				// 移除 "Freq" 字串部分只留下數字部分
-				RemoveSubstringAndProcess("Freq", strlen("Freq"), &wave_Freq);
-				Wave_Freq_Update(wave_select, &wave_Freq);
+				// 移除對應Vpp & Freq字組然後
+				// 判別User的input波型loading對應的表
+				RemoveSubstringMulti();
 			}
 			else
 			{
-				// Vpp 事件
-				// 移除 "Vpp" 字串後的數字
-				RemoveSubstringAndProcess("Vpp", strlen("Vpp"), &wave_Vpp);
-				/*判別sine & tri 呼叫跟新對應DAC table*/
-				DAC_Table_Create(wave_select, &wave_Vpp);
+				// 如果只包含 "Freq"，执行第一个事件
+				if (strstr(_rx_buffer2->buffer, "Freq") != NULL)
+				{
+					// 移除 "Freq" 字串部分只留下數字部分
+					RemoveSubstringAndProcess("Freq", strlen("Freq"), &wave_Freq);
+					Wave_Freq_Update(wave_select, &wave_Freq);
+				}
+
+				// 如果只包含 "Vpp"，执行第二个事件
+				if (strstr(_rx_buffer2->buffer, "Vpp") != NULL)
+				{
+					// 移除 "Vpp" 字串後的數字
+					RemoveSubstringAndProcess("Vpp", strlen("Vpp"), &wave_Vpp);
+					// 判別sine & tri 呼叫跟新對應DAC table
+					DAC_Table_Create(wave_select, &wave_Vpp);
+				}
 			}
 		}
 	}
@@ -1185,9 +1245,9 @@ void DAC_Table_Create(int wave_name, uint16_t *vpp_value)
 	{
 		current_table = sawtooth_table;
 		sprintf(buffer, "SawtoothWave");
-		for (int i = 0; i < Tri_Resltion; i++)
+		for (int i = 0; i < Table_Size; i++)
 		{
-			sawtooth_table[i] = (uint16_t)(((i * Vpp_resaltion) / Tri_Resltion) & 0xFFF);
+			sawtooth_table[i] = (uint16_t)(((i * Vpp_resaltion) / Table_Size) & 0xFFF);
 		}
 	}
 	/*Sine*/
@@ -1195,9 +1255,9 @@ void DAC_Table_Create(int wave_name, uint16_t *vpp_value)
 	{
 		current_table = sine_table;
 		sprintf(buffer, "SineWave");
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < Table_Size; i++)
 		{
-			sine_table[i] = ((sin(i * 2 * PI / 100) + 1) * (Vpp_resaltion / 2));
+			sine_table[i] = ((sin(i * 2 * PI / Table_Size) + 1) * (Vpp_resaltion / 2));
 		}
 	}
 	/*DMA loading 指向對應表格*/
@@ -1212,7 +1272,7 @@ void DAC_Table_Create(int wave_name, uint16_t *vpp_value)
  */
 void Wave_Freq_Update(int wave_name, uint16_t *wave_value)
 {
-	uint16_t Vpp_resaltion=4096;
+	uint16_t Vpp_resaltion = 4096;
 	/*創建default指標*/
 	uint32_t *current_table = sawtooth_table;
 	/*停止DMA 訪問表格*/
@@ -1222,9 +1282,9 @@ void Wave_Freq_Update(int wave_name, uint16_t *wave_value)
 	{
 		current_table = sawtooth_table;
 		// sprintf(buffer, "SawtoothWave");
-		for (int i = 0; i < Tri_Resltion; i++)
+		for (int i = 0; i < Table_Size; i++)
 		{
-			sawtooth_table[i] = (uint16_t)(((i * Vpp_resaltion) / Tri_Resltion) & 0xFFF);
+			sawtooth_table[i] = (uint16_t)(((i * Vpp_resaltion) / Table_Size) & 0xFFF);
 		}
 	}
 	/*Sine*/
@@ -1232,15 +1292,83 @@ void Wave_Freq_Update(int wave_name, uint16_t *wave_value)
 	{
 		current_table = sine_table;
 		// sprintf(buffer, "SineWave");
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < Table_Size; i++)
 		{
-			sine_table[i] = ((sin(i * 2 * PI / 100) + 1) * (Vpp_resaltion / 2));
+			sine_table[i] = ((sin(i * 2 * PI / Table_Size) + 1) * (Vpp_resaltion / 2));
 		}
 	}
 
 	uint16_t wave_update_freq = *wave_value;
 	uint32_t wave_Freq = wave_update_freq * 5000;
 	// TIM2->ARR = (uint32_t)((SystemCoreClock) / ((TIM2->PSC + 1) * wave_Freq));
-	TIM2->ARR = (uint32_t)((18000000) / ((8) * wave_Freq));
+	TIM2->ARR = (uint32_t)((Osc_CLK) / ((8) * wave_Freq));
 	HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, current_table, Table_Size, DAC_ALIGN_12B_R);
+}
+
+/**
+ * @brief Freq 和 Vpp同時跟新事件
+ *
+ * @param wave_name 選擇波型
+ * @param wave_vpp
+ * @param wave_freq
+ */
+void Wave_Vpp_Freq_Multi_Thread_Update(int wave_name, uint16_t *wave_vpp, uint16_t *wave_freq)
+{
+	char output_Buff[Uart_Buffer];
+	/*截取User Vpp 紀錄*/
+	uint16_t offset = *wave_vpp;
+	uint16_t Vpp_resaltion;
+	switch (offset)
+	{
+
+	case 3:
+		Vpp_resaltion = 4096;
+		break;
+
+	case 2:
+		Vpp_resaltion = 2048;
+		break;
+
+	case 1:
+		Vpp_resaltion = 1024;
+		break;
+
+	default:
+		Vpp_resaltion = 1024;
+		break;
+	}
+	/*創建default指標*/
+	uint32_t *current_table = sawtooth_table;
+	/*停止DMA 訪問表格*/
+	HAL_DAC_Stop_DMA(&hdac, DAC_CHANNEL_1);
+	/*判別Tri*/
+	if (wave_name == TriWave)
+	{
+		current_table = sawtooth_table;
+		// sprintf(buffer, "SawtoothWave");
+		for (int i = 0; i < Table_Size; i++)
+		{
+			sawtooth_table[i] = (uint16_t)(((i * Vpp_resaltion) / Table_Size) & 0xFFF);
+		}
+	}
+	/*Sine*/
+	else if (wave_name == SineWave)
+	{
+		current_table = sine_table;
+		// sprintf(buffer, "SineWave");
+		for (int i = 0; i < Table_Size; i++)
+		{
+			sine_table[i] = ((sin(i * 2 * PI / Table_Size) + 1) * (Vpp_resaltion / 2));
+		}
+	}
+
+	/*計算Freq*/
+	uint16_t wave_update_freq = *wave_freq;
+	uint32_t wave_Value = wave_update_freq * 5000;
+	TIM2->ARR = (uint32_t)((Osc_CLK) / ((8) * wave_Value));
+	/*跟新DAC 指向DATATABLE*/
+	HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, current_table, Table_Size, DAC_ALIGN_12B_R);
+	/*Uart 打印是否正確*/
+	sprintf(output_Buff, "Vpp is %d,Freq is %d", *wave_vpp, *wave_freq);
+	Uart_sendstring(output_Buff, pc_uart);
 }

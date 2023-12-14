@@ -162,42 +162,66 @@ extern _ARMABI size_t strlen(const char * /*s*/) __attribute__((__nonnull__(1)))
 C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdlib.h(164): note: passing argument to parameter here
 extern _ARMABI int atoi(const char * /*nptr*/) __attribute__((__nonnull__(1)));
                                              ^
-../Core/Src/UartRingbuffer_multi.c(1088): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+../Core/Src/UartRingbuffer_multi.c(1123): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+        extractValues(_rx_buffer2->buffer, &wave_User_Vpp, &wave_User_Freq);
+                      ^~~~~~~~~~~~~~~~~~~
+../Core/Src/UartRingbuffer_multi.c(1089): note: passing argument to parameter 'input' here
+void extractValues(const char *input, int *vpp, int *freq)
+                               ^
+../Core/Src/UartRingbuffer_multi.c(1123): warning: incompatible pointer types passing 'uint16_t *' (aka 'unsigned short *') to parameter of type 'int *' [-Wincompatible-pointer-types]
+        extractValues(_rx_buffer2->buffer, &wave_User_Vpp, &wave_User_Freq);
+                                           ^~~~~~~~~~~~~~
+../Core/Src/UartRingbuffer_multi.c(1089): note: passing argument to parameter 'vpp' here
+void extractValues(const char *input, int *vpp, int *freq)
+                                           ^
+../Core/Src/UartRingbuffer_multi.c(1123): warning: incompatible pointer types passing 'uint16_t *' (aka 'unsigned short *') to parameter of type 'int *' [-Wincompatible-pointer-types]
+        extractValues(_rx_buffer2->buffer, &wave_User_Vpp, &wave_User_Freq);
+                                                           ^~~~~~~~~~~~~~~
+../Core/Src/UartRingbuffer_multi.c(1089): note: passing argument to parameter 'freq' here
+void extractValues(const char *input, int *vpp, int *freq)
+                                                     ^
+../Core/Src/UartRingbuffer_multi.c(1137): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
         int16_t wave_name_size = Search_String_Element(rx_buffer2.buffer, Target);
                                                        ^~~~~~~~~~~~~~~~~
 ../Core/Src/UartRingbuffer_multi.c(621): note: passing argument to parameter 'input' here
 int16_t Search_String_Element(const char *input, const char *search_str)
                                           ^
-../Core/Src/UartRingbuffer_multi.c(1106): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+../Core/Src/UartRingbuffer_multi.c(1155): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
                 size_t len = strlen(_rx_buffer2->buffer);
                                     ^~~~~~~~~~~~~~~~~~~
 C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(335): note: passing argument to parameter here
 extern _ARMABI size_t strlen(const char * /*s*/) __attribute__((__nonnull__(1)));
                                                ^
-../Core/Src/UartRingbuffer_multi.c(1117): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                if (strstr(_rx_buffer2->buffer, "Freq") != NULL || strstr(_rx_buffer2->buffer, "Vpp") != NULL)
-                           ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(270): note: passing argument to parameter here
-extern _ARMABI char *strstr(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
-                                               ^
-../Core/Src/UartRingbuffer_multi.c(1117): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                if (strstr(_rx_buffer2->buffer, "Freq") != NULL || strstr(_rx_buffer2->buffer, "Vpp") != NULL)
-                                                                          ^~~~~~~~~~~~~~~~~~~
-C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(270): note: passing argument to parameter here
-extern _ARMABI char *strstr(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
-                                               ^
-../Core/Src/UartRingbuffer_multi.c(1119): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
-                        if (strstr(_rx_buffer2->buffer, "Freq") != NULL)
+../Core/Src/UartRingbuffer_multi.c(1168): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+                        if (strstr(_rx_buffer2->buffer, "Freq") != NULL && strstr(_rx_buffer2->buffer, "Vpp") != NULL)
                                    ^~~~~~~~~~~~~~~~~~~
 C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(270): note: passing argument to parameter here
 extern _ARMABI char *strstr(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
                                                ^
-28 warnings generated.
+../Core/Src/UartRingbuffer_multi.c(1168): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+                        if (strstr(_rx_buffer2->buffer, "Freq") != NULL && strstr(_rx_buffer2->buffer, "Vpp") != NULL)
+                                                                                  ^~~~~~~~~~~~~~~~~~~
+C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(270): note: passing argument to parameter here
+extern _ARMABI char *strstr(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+                                               ^
+../Core/Src/UartRingbuffer_multi.c(1177): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+                                if (strstr(_rx_buffer2->buffer, "Freq") != NULL)
+                                           ^~~~~~~~~~~~~~~~~~~
+C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(270): note: passing argument to parameter here
+extern _ARMABI char *strstr(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+                                               ^
+../Core/Src/UartRingbuffer_multi.c(1185): warning: passing 'unsigned char[128]' to parameter of type 'const char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+                                if (strstr(_rx_buffer2->buffer, "Vpp") != NULL)
+                                           ^~~~~~~~~~~~~~~~~~~
+C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(270): note: passing argument to parameter here
+extern _ARMABI char *strstr(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+                                               ^
+32 warnings generated.
 compiling UartRingbuffer_multi.c...
 linking...
-Program Size: Code=26820 RO-data=1268 RW-data=12 ZI-data=3596  
+Program Size: Code=28886 RO-data=1306 RW-data=12 ZI-data=3604  
 FromELF: creating hex file...
-"Calibattion_TEST_TO_GUI\Calibattion_TEST_TO_GUI.axf" - 0 Error(s), 28 Warning(s).
+"Calibattion_TEST_TO_GUI\Calibattion_TEST_TO_GUI.axf" - 0 Error(s), 32 Warning(s).
 
 <h2>Software Packages used:</h2>
 

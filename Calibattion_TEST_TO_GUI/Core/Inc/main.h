@@ -39,6 +39,7 @@ extern "C"
 #include "FLASH_SECTOR_F4.h"
 #include "math.h"
 #include <ctype.h>
+
   /* Private includes ----------------------------------------------------------*/
   /* USER CODE BEGIN Includes */
 
@@ -128,7 +129,7 @@ extern "C"
 #define false (1)
 
 /* USER CODE END EFP */
-
+#define Osc_CLK (18000000)
 /* Private defines -----------------------------------------------------------*/
 #define B1_Pin GPIO_PIN_13
 #define B1_GPIO_Port GPIOC
@@ -174,10 +175,11 @@ extern "C"
 
 /*Search char*/
 #define Target ("W")
+#define Target_Multi ("F")
 #define Wave_len (4) 
 #define TriWave (1)
 #define SineWave (2)
-
+#define Freq_value_len (6)
 
 
 

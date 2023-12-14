@@ -31,9 +31,10 @@ extern void initail_PWM_info(void);
 /*Tri 三角波測試*/
 extern void DAC_Tri_Wave(void);
 extern void get_sineval(void);
-/**/
+/*波型事件*/
 extern void WaveFrom_Event(void);
 extern void RemoveSubstringAndProcess(const char* target, size_t start_pos, uint16_t* wave_value);
 extern void DAC_Table_Create(int wave_name, uint16_t *vpp_value);
 extern void Wave_Freq_Update(int wave_name,uint16_t *wave_value);
+extern void Wave_Vpp_Freq_Multi_Thread_Update(int wave_name, uint16_t *wave_vpp, uint16_t *wave_freq);
 #endif

@@ -95,5 +95,6 @@ void Get_Command_From_C_shrap(void);
 void Reset_Rx_Buffer(void);
 /*保護事件*/
 void OTP_Protect_Event(void);
+void extractValues(const char *input, int *vpp, int *freq) ;
 int16_t Search_String_Element(const char *input, const char *search_str);
 #endif /* UARTRINGBUFFER_H_ */
